@@ -134,6 +134,14 @@ Routing:
 
 Sign-out is in the topbar — clears the session, removes the localStorage key, and routes to `/login`.
 
+#### Why does the login screen ask for an API token?
+
+The token is the proof of identity. Without it, the server can't verify that the user is who they claim to be, and "Jira login" would devolve into typing an email — which is exactly the email-only flow we removed. The atlas-service backend uses the token to call Jira's `myself` endpoint with HTTP Basic; Atlassian responds 200 only if the email + token pair is real, and the server additionally cross-checks that the email Jira returns matches the submitted one.
+
+Users create their tokens at <https://id.atlassian.com/manage-profile/security/api-tokens>. The login form links there directly under the token field.
+
+A redirect-based "Sign in with Jira" (Atlassian OAuth 2.0 / 3LO) would remove the paste step but requires registering an OAuth app in the Atlassian developer console + handling the callback. Out of scope for now.
+
 The atlas-service end requires `JIRA_BASE_URL=https://<workspace>.atlassian.net` to be set on the server; without it, login attempts fail with a friendly i18n error rather than silently breaking. See [atlas-service README — Authentication](https://github.com/Scaled-AIOps/atlas-service#authentication) for the server-side details.
 
 ### Internationalisation

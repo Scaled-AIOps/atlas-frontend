@@ -98,6 +98,7 @@ npm test                                        # vitest
 
 - Auth UI — we read the `AUTH_TOKEN` once but there's no login form yet (atlas-service token is shared)
 - Mutations — list/detail pages are read-only; no Create/Edit forms yet
+- **Atlassian OAuth 2.0 (3LO) "Sign in with Jira"** — would replace the API-token paste with a redirect-based flow. Requires registering an OAuth app in Atlassian's developer console + handling the callback. Today's API-token form is the simplest design that *actually* authenticates without OAuth infrastructure.
 - A `/feedback` admin page (paired with a server-side feedback resource)
 - E2E tests — only unit-level coverage today
 - Dark mode toggle — palette is set up via CSS variables, but only the light theme exists

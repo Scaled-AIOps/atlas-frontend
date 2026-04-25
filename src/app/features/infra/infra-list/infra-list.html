@@ -1,33 +1,33 @@
 <div class="page-header">
   <div class="page-title">
-    <h1>Infrastructure</h1>
-    <div class="page-sub">Deployment platforms across environments</div>
+    <h1>{{ 'infra.title' | translate }}</h1>
+    <div class="page-sub">{{ 'infra.subtitle' | translate }}</div>
   </div>
 </div>
 
-<app-list-controls [state]="state" exportName="infra" searchPlaceholder="Search platforms, name, host…" />
+<app-list-controls [state]="state" exportName="infra" searchPlaceholderKey="infra.search_placeholder" />
 
 <div class="card">
   @if (loading()) {
-    <div class="loading-block"><span class="spinner"></span> Loading infra…</div>
+    <div class="loading-block"><span class="spinner"></span> {{ 'infra.loading' | translate }}</div>
   } @else if (error()) {
     <div class="loading-block">⚠ {{ error() }}</div>
   } @else if (state.total() === 0) {
     <div class="empty-state">
       <div class="empty-icon">◇</div>
-      <div class="empty-title">No infrastructure entries match the current filters</div>
+      <div class="empty-title">{{ 'infra.empty' | translate }}</div>
     </div>
   } @else {
     <table class="table">
       <thead>
         <tr>
-          <th>Platform ID</th>
-          <th>Name</th>
-          <th>Platform</th>
-          <th>Type</th>
-          <th>Environment</th>
-          <th>Cluster</th>
-          <th>Host</th>
+          <th>{{ 'infra.col.platform_id' | translate }}</th>
+          <th>{{ 'infra.col.name' | translate }}</th>
+          <th>{{ 'infra.col.platform' | translate }}</th>
+          <th>{{ 'infra.col.type' | translate }}</th>
+          <th>{{ 'infra.col.environment' | translate }}</th>
+          <th>{{ 'infra.col.cluster' | translate }}</th>
+          <th>{{ 'infra.col.host' | translate }}</th>
         </tr>
       </thead>
       <tbody>

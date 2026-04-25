@@ -1,36 +1,40 @@
 <div class="page-header">
   <div class="page-title">
-    <h1>Deploy history: {{ record()?.appId || '…' }}</h1>
-    <div class="page-sub">Append-only log per environment</div>
+    <h1>{{ 'deploy_detail.title' | translate: { id: record()?.appId || '…' } }}</h1>
+    <div class="page-sub">{{ 'deploy_detail.subtitle' | translate }}</div>
   </div>
-  <a class="btn btn-ghost" [routerLink]="['/appstatus']">← Back to deployments</a>
+  <a class="btn btn-ghost" [routerLink]="['/appstatus']">{{ 'deploy_detail.back' | translate }}</a>
 </div>
 
 @if (loading()) {
-  <div class="card loading-block"><span class="spinner"></span> Loading…</div>
+  <div class="card loading-block"><span class="spinner"></span> {{ 'common.loading' | translate }}</div>
 } @else if (error()) {
   <div class="card loading-block">⚠ {{ error() }}</div>
 } @else if (record(); as r) {
   @for (env of envs; track env) {
     <h3 style="margin-top: 1.5rem;">
-      Environment: <span class="badge badge-muted">{{ env }}</span>
+      {{ 'deploy_detail.env_label' | translate }} <span class="badge badge-muted">{{ env }}</span>
     </h3>
     <div class="card">
       @if (entriesDesc(r, env).length === 0) {
         <div class="empty-state" style="padding: 1.5rem;">
-          <div>No deploys recorded for {{ env }}</div>
+          <div>{{ 'deploy_detail.no_deploys_for' | translate: { env: env } }}</div>
         </div>
       } @else {
         <table class="table">
           <thead>
             <tr>
-              <th>Deployed at</th>
-              <th>State</th>
-              <th>Version</th>
-              <th>Branch</th>
-              <th>Commit</th>
-              <th>Deployed by</th>
-              <th>Notes</th>
+              <th>{{ 'deploy_detail.col.deployed_at' | translate }}</th>
+              <th>{{ 'deploy_detail.col.state' | translate }}</th>
+              <th>{{ 'deploy_detail.col.version' | translate }}</th>
+              <th>{{ 'deploy_detail.col.branch' | translate }}</th>
+              <th>{{ 'deploy_detail.col.commit' | translate }}</th>
+              <th>{{ 'deploy_detail.col.deployed_by' | translate }}</th>
+              <th>{{ 'deploy_detail.col.java' | translate }}</th>
+              <th>{{ 'deploy_detail.col.compliance' | translate }}</th>
+              <th>{{ 'deploy_detail.col.xray' | translate }}</th>
+              <th>{{ 'deploy_detail.col.change_request' | translate }}</th>
+              <th>{{ 'deploy_detail.col.notes' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -42,6 +46,26 @@
                 <td>{{ d.branch || '—' }}</td>
                 <td><code style="font-size: 0.78rem;">{{ d.commitId || '—' }}</code></td>
                 <td>{{ d.deployedBy || '—' }}</td>
+                <td>{{ d.javaVersion || '—' }}</td>
+                <td>
+                  @if (d.javaComplianceStatus) {
+                    <span [class]="complianceClass(d.javaComplianceStatus)">{{ d.javaComplianceStatus }}</span>
+                  } @else { — }
+                </td>
+                <td>
+                  @if (d.xray) {
+                    <a [href]="d.xray" target="_blank" rel="noopener" style="font-size: 0.78rem;">{{ 'deploy_detail.col.scan_link' | translate }}</a>
+                  } @else { — }
+                </td>
+                <td>
+                  @if (d.changeRequest) {
+                    @if (d.changeRequest.startsWith('http')) {
+                      <a [href]="d.changeRequest" target="_blank" rel="noopener" style="font-size: 0.78rem;">{{ d.changeRequest }} ↗</a>
+                    } @else {
+                      <code style="font-size: 0.78rem;">{{ d.changeRequest }}</code>
+                    }
+                  } @else { — }
+                </td>
                 <td>{{ d.notes || '—' }}</td>
               </tr>
             }

@@ -1,31 +1,31 @@
 <div class="page-header">
   <div class="page-title">
-    <h1>Applications</h1>
-    <div class="page-sub">All registered applications and their squads</div>
+    <h1>{{ 'apps.title' | translate }}</h1>
+    <div class="page-sub">{{ 'apps.subtitle' | translate }}</div>
   </div>
 </div>
 
-<app-list-controls [state]="state" exportName="appinfo" searchPlaceholder="Search apps, squad, repo…" />
+<app-list-controls [state]="state" exportName="appinfo" searchPlaceholderKey="apps.search_placeholder" />
 
 <div class="card">
   @if (loading()) {
-    <div class="loading-block"><span class="spinner"></span> Loading apps…</div>
+    <div class="loading-block"><span class="spinner"></span> {{ 'apps.loading' | translate }}</div>
   } @else if (error()) {
     <div class="loading-block">⚠ {{ error() }}</div>
   } @else if (state.total() === 0) {
     <div class="empty-state">
       <div class="empty-icon">◆</div>
-      <div class="empty-title">No applications match the current filters</div>
+      <div class="empty-title">{{ 'apps.empty' | translate }}</div>
     </div>
   } @else {
     <table class="table">
       <thead>
         <tr>
-          <th>App ID</th>
-          <th>Squad</th>
-          <th>Status</th>
-          <th>Prd platform</th>
-          <th>Repository</th>
+          <th>{{ 'apps.col.app_id' | translate }}</th>
+          <th>{{ 'apps.col.squad' | translate }}</th>
+          <th>{{ 'apps.col.status' | translate }}</th>
+          <th>{{ 'apps.col.prd_platform' | translate }}</th>
+          <th>{{ 'apps.col.repository' | translate }}</th>
         </tr>
       </thead>
       <tbody>

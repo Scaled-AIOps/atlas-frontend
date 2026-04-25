@@ -8,6 +8,8 @@ Features:
 - **Graph view** — 5-tier left-to-right hierarchy (Tribe Domain → Sub-domain → Tribe → Squad → App), each tribe domain rendered as a "river of colour" with curved edges; click to focus a branch, double-click to drill into the resource
 - **List pages** for squads, infra, applications, deployments — each backed by a shared toolbar with **search**, **filter chips**, **sort**, **pagination**, and **CSV / JSON / YAML export**
 - **Detail pages** for every resource, with cross-links between squad ↔ app ↔ infra ↔ deploy history
+- **Multi-language** UI — English and German, switchable from the topbar; persists in `localStorage`
+- **Role-aware quick actions** on the dashboard — pick your email to see your squads, your apps grouped by status, your recent deploys, and a one-click jump to your squad
 - **Blue colour theme** (CSS variables) with a fixed sidebar shell
 
 The whole app is **zoneless** (Angular 21 default) and uses **signals** end-to-end for reactivity.
@@ -35,6 +37,10 @@ npm test                            # vitest
 ```
 atlas-frontend/
 ├── proxy.conf.json                       # /api → http://localhost:3000
+├── public/
+│   └── i18n/
+│       ├── en.json                       # English UI strings
+│       └── de.json                       # German UI strings
 ├── src/
 │   ├── environments/
 │   │   ├── environment.ts                # production: apiBaseUrl = '/api'
@@ -42,12 +48,15 @@ atlas-frontend/
 │   ├── styles.scss                       # global blue theme + .card/.table/.badge/.btn primitives
 │   ├── index.html                        # Inter font, app-root mount
 │   └── app/
-│       ├── app.{ts,html,routes,config}   # bootstrap + lazy routes
-│       ├── core/api/
-│       │   ├── atlas-api.ts              # injectable HttpClient wrapper for all 4 resources
-│       │   └── models.ts                 # TypeScript interfaces matching the API
+│       ├── app.{ts,html,routes,config}   # bootstrap + lazy routes + ngx-translate provider
+│       ├── core/
+│       │   ├── api/
+│       │   │   ├── atlas-api.ts          # injectable HttpClient wrapper for all 4 resources
+│       │   │   └── models.ts             # TypeScript interfaces matching the API
+│       │   └── i18n/
+│       │       └── locale.service.ts     # signal-backed locale state + localStorage persistence
 │       ├── shared/
-│       │   ├── shell/                    # sidebar + topbar layout
+│       │   ├── shell/                    # sidebar + topbar layout (incl. language picker)
 │       │   ├── list-state.ts             # generic ListState<T> signal class (search/filter/sort/page)
 │       │   ├── list-controls/            # shared toolbar component (search, filter dropdowns, chips, sort, export, pagesize)
 │       │   ├── pagination/               # "Showing X-Y of Z" + Prev/Next
@@ -108,6 +117,14 @@ Click any node → side panel slides in with its metadata and a clickable child 
 
 `AtlasApi` (`core/api/atlas-api.ts`) is a thin `HttpClient` wrapper. Base URL comes from `environment.apiBaseUrl`. In dev that's `/api`, proxied by `ng serve` to `http://localhost:3000` (atlas-service). In production the SPA is served from the same origin as the API, so `/api` works there too.
 
+### Internationalisation
+
+Powered by `@ngx-translate/core` (v17) with the HTTP loader. JSON files live at `public/i18n/{en,de}.json` and are fetched at startup. Every visible string in the app is keyed (e.g. `nav.dashboard`, `dashboard.alert_failed`, `deploy_detail.col.change_request`) — no hard-coded labels in templates.
+
+`LocaleService` (`core/i18n/locale.service.ts`) holds the current locale as a signal, persists the choice in `localStorage.atlas.locale`, and falls back to the browser's `navigator.language` then `'en'`. The shell topbar renders a `<select>` switcher; switching is instant and reload-free because the translation pipe is reactive.
+
+API enum values (`active`, `failed`, `compliant`, env names like `prd`) are kept in their native form to match the atlas-service contract — only display labels are translated. Adding a new language is two steps: drop another `<lang>.json`, add it to `SUPPORTED_LOCALES` in `locale.service.ts`.
+
 ---
 
 ## Scripts
@@ -135,6 +152,7 @@ The dev server has hot module replacement, so component edits reload sub-second.
 
 - **Angular 21** (zoneless, signals, `viewChild()` reactive refs, `@if/@for/@switch` control flow)
 - **vis-network** + **vis-data** for the graph
+- **@ngx-translate/core** (v17) + HTTP loader for runtime i18n (en / de)
 - **js-yaml** for YAML export
 - **rxjs** for HTTP observables
 - **SCSS** with CSS custom properties for theming (no UI component library; primitives are in `styles.scss`)

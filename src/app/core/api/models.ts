@@ -73,6 +73,10 @@ export interface AppInfo {
 
 // ── AppStatus ────────────────────────────────────────────────────────────
 export type DeployState = 'success' | 'failed' | 'pending' | 'rolledback';
+export type JavaComplianceStatus = 'compliant' | 'non-compliant' | 'exempt' | 'unknown';
+export const JAVA_COMPLIANCE_STATUSES: JavaComplianceStatus[] = [
+  'compliant', 'non-compliant', 'exempt', 'unknown',
+];
 
 export interface DeployEntry {
   state: DeployState;
@@ -82,6 +86,10 @@ export interface DeployEntry {
   deployedAt: string;
   deployedBy?: string;
   notes?: string;
+  xray?: string;
+  javaVersion?: string;
+  javaComplianceStatus?: JavaComplianceStatus | '';
+  changeRequest?: string;
 }
 
 export interface AppStatusRecord {

@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AtlasApi } from '../../../core/api/atlas-api';
 import { AppStatusRecord, ENVIRONMENTS, Environment } from '../../../core/api/models';
 import { ListState } from '../../../shared/list-state';
@@ -8,12 +9,13 @@ import { Pagination } from '../../../shared/pagination/pagination';
 
 @Component({
   selector: 'app-appstatus-list',
-  imports: [RouterLink, ListControls, Pagination],
+  imports: [RouterLink, ListControls, Pagination, TranslateModule],
   templateUrl: './appstatus-list.html',
   styleUrl: './appstatus-list.scss',
 })
 export class AppstatusList implements OnInit {
   private api = inject(AtlasApi);
+  private route = inject(ActivatedRoute);
   readonly envs = ENVIRONMENTS;
 
   loading = signal(true);
@@ -23,17 +25,18 @@ export class AppstatusList implements OnInit {
   constructor() {
     this.state.searchFields = [(r) => r.appId];
     this.state.filterFields = [
-      { key: 'prdState', label: 'Prd state', pick: (r) => this.latest(r, 'prd')?.state },
-      { key: 'uatState', label: 'Uat state', pick: (r) => this.latest(r, 'uat')?.state },
+      { key: 'prdState', label: 'deploys.col.prd_state', pick: (r) => this.latest(r, 'prd')?.state },
+      { key: 'uatState', label: 'deploys.col.uat_state', pick: (r) => this.latest(r, 'uat')?.state },
     ];
     this.state.sortFields = [
-      { key: 'appId', label: 'App ID', pick: (r) => r.appId },
-      { key: 'prdAt', label: 'Last prd deploy', pick: (r) => this.latest(r, 'prd')?.deployedAt },
+      { key: 'appId', label: 'deploys.col.app_id',         pick: (r) => r.appId },
+      { key: 'prdAt', label: 'deploys.col.last_prd_deploy', pick: (r) => this.latest(r, 'prd')?.deployedAt },
     ];
     this.state.setSort('appId', 'asc');
   }
 
   ngOnInit() {
+    this.state.applyFilterParams(this.route.snapshot.queryParamMap);
     this.api.listAppStatus().subscribe({
       next: (r) => { this.state.setSource(r); this.loading.set(false); },
       error: (e) => { this.error.set(e?.message ?? 'Failed to load'); this.loading.set(false); },

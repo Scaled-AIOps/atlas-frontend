@@ -1,18 +1,20 @@
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { ListState } from '../list-state';
 import { downloadAs, ExportFormat, makeFilename, serializeFor } from '../export';
 
 @Component({
   selector: 'app-list-controls',
-  imports: [FormsModule],
+  imports: [FormsModule, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './list-controls.html',
   styleUrl: './list-controls.scss',
 })
 export class ListControls<T> {
   @Input({ required: true }) state!: ListState<T>;
-  @Input() searchPlaceholder = 'Search…';
+  /** Translation key for the search input placeholder, e.g. `squads.search_placeholder`. */
+  @Input() searchPlaceholderKey = '';
   /** Filename prefix used for exported files, e.g. "squads". */
   @Input() exportName = 'export';
 

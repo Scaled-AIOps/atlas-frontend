@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AtlasApi } from '../../../core/api/atlas-api';
 import { Infra } from '../../../core/api/models';
 
 @Component({
   selector: 'app-infra-detail',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslateModule],
   templateUrl: './infra-detail.html',
   styleUrl: './infra-detail.scss',
 })

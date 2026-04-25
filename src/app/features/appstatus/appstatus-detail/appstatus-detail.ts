@@ -1,12 +1,13 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { AtlasApi } from '../../../core/api/atlas-api';
 import { AppStatusRecord, DeployEntry, ENVIRONMENTS, Environment } from '../../../core/api/models';
 
 @Component({
   selector: 'app-appstatus-detail',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, TranslateModule],
   templateUrl: './appstatus-detail.html',
   styleUrl: './appstatus-detail.scss',
 })
@@ -40,6 +41,16 @@ export class AppstatusDetail implements OnInit {
       case 'failed':
       case 'rolledback': return 'badge badge-danger';
       case 'pending': return 'badge badge-warn';
+      default: return 'badge badge-muted';
+    }
+  }
+
+  complianceClass(status?: string): string {
+    switch (status) {
+      case 'compliant': return 'badge badge-success';
+      case 'non-compliant': return 'badge badge-danger';
+      case 'exempt': return 'badge badge-warn';
+      case 'unknown': return 'badge badge-muted';
       default: return 'badge badge-muted';
     }
   }

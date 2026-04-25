@@ -7,13 +7,15 @@ Angular 21 SPA that consumes [atlas-service](https://github.com/Scaled-AIOps/atl
 | Need to… | Look at |
 |---|---|
 | Add a new list page | mirror `features/squads/squads-list/` — declare a `ListState<T>`, drop in `<app-list-controls>` + `<app-pagination>`, render `state.page()` |
-| Add a new filter / sort / search field on a list | the page's `constructor()` — push into `state.searchFields` / `filterFields` / `sortFields`. Filter dropdown values auto-derive from data |
+| Add a new filter / sort / search field on a list | the page's `constructor()` — push into `state.searchFields` / `filterFields` / `sortFields`. Filter dropdown values auto-derive from data. `label` should be a translation key, e.g. `'squads.col.tribe'` |
+| Add or rename a UI string | edit `public/i18n/en.json` AND `public/i18n/de.json` — keys must match. Templates use `{{ 'key.path' \| translate }}` or `translate: { count: x, key: y }` for interpolation |
+| Add a new locale | drop `public/i18n/<lang>.json`, add `'<lang>'` to `SUPPORTED_LOCALES` in `core/i18n/locale.service.ts` |
 | Change the API base URL | `src/environments/environment*.ts` — dev uses `/api` (proxied), prod uses `/api` (same-origin) |
 | Tweak the dev proxy | `proxy.conf.json` (rewrites `/api` → `:3000`); wired in `angular.json → serve.options.proxyConfig` |
 | Add a new resource | new `core/api/models.ts` interface + `AtlasApi` method, then list/detail components under `features/<name>/` |
 | Change the global blue theme | `src/styles.scss` `:root { --blue-* }` palette |
 | Touch the graph view | `features/graph/graph-view/` — `buildData()` is the topology builder, `rebuild()` is the vis-network mount |
-| Change the shell layout | `shared/shell/shell.{ts,html,scss}` — sidebar, topbar, router-outlet |
+| Change the shell layout | `shared/shell/shell.{ts,html,scss}` — sidebar, topbar (with language picker), router-outlet |
 
 ## Architecture rules
 
@@ -48,6 +50,9 @@ Angular 21 SPA that consumes [atlas-service](https://github.com/Scaled-AIOps/atl
 
 App status enum: `active | inactive | marked-for-decommissioning | failed`.
 Deploy state enum: `success | failed | pending | rolledback`.
+Java compliance enum: `compliant | non-compliant | exempt | unknown`.
+
+A deploy entry in `appstatus` has 11 fields: `version`, `commitId`, `branch`, `deployedBy`, `deployedAt`, `state`, `notes`, `xray`, `javaVersion`, `javaComplianceStatus`, `changeRequest`. The last four are appended optionally; when missing the server returns `""`.
 
 ## Common commands
 
@@ -79,6 +84,9 @@ npm test                                        # vitest
 - **Export uses `state.sorted()` not `state.page()`** — exporting only the visible page would be a footgun; users expect "the rows I can see plus all the rows I'd see if I paged through".
 - **`anyComponentStyle` budget bumped to 8 kB / 16 kB** in `angular.json` — `graph-view.scss` exceeds the default 4 kB because of the rich side-panel + legend + toolbar styles. This is intentional, not bloat.
 - **CSV export JSON-encodes nested objects/arrays inside cells** — atlas-service squad fields like `mailingList`, `ao`, `tags` are arrays/objects; CSV is flat. We stringify them to keep one row per record. JSON / YAML exports preserve the native shape.
+- **Filter / sort field labels are translation keys, not literal strings** — pages set `label: 'squads.col.tribe'` and the shared `<app-list-controls>` runs them through the `translate` pipe. Means filter chips, sort dropdown options, and dropdown headers all flip language with the rest of the UI.
+- **Language `<select>` uses `[selected]` on options, not `[value]` on the select** — Angular's `[value]` on a native `<select>` doesn't update the displayed option without `ngModel` + `FormsModule`; the simpler `[selected]="l === current()"` on each `<option>` keeps the picker glyph correct.
+- **`overrides.uuid: ^14` in package.json** — silences three moderate npm-audit advisories that come transitively from `vis-data` → `vis-network` → `uuid <14`. The advisory only affects `uuid.v3()/v5()/v6()` with a buffer arg; vis uses `uuid.v4()`. The override forces the patched line everywhere, audit goes from 3 → 0 vulnerabilities, runtime is unchanged.
 
 ## Out of scope (future plans)
 
@@ -88,3 +96,4 @@ npm test                                        # vitest
 - E2E tests — only unit-level coverage today
 - Dark mode toggle — palette is set up via CSS variables, but only the light theme exists
 - A11y pass — keyboard nav works for routing and the search box, but the graph and dropdowns haven't been audited
+- More locales — only `en` and `de` ship today; the loader is generic so adding a third language is JSON-only

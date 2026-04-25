@@ -1,35 +1,195 @@
 <div class="page-header">
   <div class="page-title">
-    <h1>Dashboard</h1>
-    <div class="page-sub">Overview of squads, infrastructure, and applications</div>
+    <h1>{{ 'dashboard.title' | translate }}</h1>
+    <div class="page-sub">{{ 'dashboard.subtitle' | translate }}</div>
   </div>
 </div>
 
 @if (loading()) {
-  <div class="card loading-block"><span class="spinner"></span> Loading…</div>
+  <div class="card loading-block"><span class="spinner"></span> {{ 'common.loading' | translate }}</div>
 } @else if (error()) {
   <div class="card loading-block">⚠ {{ error() }}</div>
 } @else {
+  <!-- ── Identity picker ───────────────────────────────────────────── -->
+  <div class="card identity-card">
+    <div class="identity-row">
+      <div class="identity-label">
+        <div class="identity-eyebrow">{{ 'dashboard.quick_actions' | translate }}</div>
+        <div class="identity-help">{{ 'dashboard.quick_actions_help' | translate }}</div>
+      </div>
+      <div class="identity-input">
+        <input
+          type="search"
+          list="email-options"
+          [placeholder]="'dashboard.email_placeholder' | translate"
+          [ngModel]="email()"
+          (ngModelChange)="setEmail($event)"
+        />
+        <datalist id="email-options">
+          @for (e of emailOptions(); track e) {
+            <option [value]="e"></option>
+          }
+        </datalist>
+        @if (email()) {
+          <button class="btn btn-ghost identity-clear" (click)="clearEmail()">{{ 'common.clear' | translate }}</button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- ── My role view (when an email is selected) ──────────────────── -->
+  @if (email() && mySquads().length === 0) {
+    <div class="card empty-state">
+      <div class="empty-icon">◌</div>
+      <div class="empty-title">{{ 'dashboard.no_squads_for_email' | translate: { email: email() } }}</div>
+      <div>{{ 'dashboard.no_squads_help' | translate }}</div>
+      <p style="margin-top: 0.75rem;">
+        <a class="btn btn-ghost" [routerLink]="['/squads']">{{ 'dashboard.browse_squads' | translate }}</a>
+      </p>
+    </div>
+  } @else if (email()) {
+    <div class="qa-grid">
+      <!-- My squads -->
+      <div class="card qa-card">
+        <div class="qa-card-head">
+          <h3>{{ 'dashboard.my_squads' | translate: { count: mySquads().length } }}</h3>
+          <div class="qa-card-sub">{{ 'dashboard.my_squads_sub' | translate }}</div>
+        </div>
+        <ul class="my-squads">
+          @for (m of mySquads(); track m.squad.key) {
+            <li>
+              <a [routerLink]="['/squads', m.squad.key]" class="my-squad-key">
+                {{ m.squad.key }}
+              </a>
+              <span class="my-squad-name">{{ m.squad.name || '' }}</span>
+              <span class="role-chips">
+                @for (r of m.roles; track r) {
+                  <span class="role-chip" [class.role-po]="r === 'PO'" [class.role-sm]="r === 'SM'" [class.role-ao]="r === 'AO'">{{ r }}</span>
+                }
+              </span>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <!-- My applications -->
+      <div class="card qa-card">
+        <div class="qa-card-head">
+          <h3>{{ 'dashboard.my_apps' | translate: { count: myApps().length } }}</h3>
+          <div class="qa-card-sub">{{ 'dashboard.my_apps_sub' | translate }}</div>
+        </div>
+        @if (myApps().length === 0) {
+          <div class="empty-state" style="padding: 1.5rem;">{{ 'dashboard.my_apps_empty' | translate }}</div>
+        } @else {
+          @for (group of [
+            { key: 'failed', labelKey: 'dashboard.status_failed' },
+            { key: 'marked-for-decommissioning', labelKey: 'dashboard.status_decom' },
+            { key: 'inactive', labelKey: 'dashboard.status_inactive' },
+            { key: 'active', labelKey: 'dashboard.status_active' }
+          ]; track group.key) {
+            @if (myAppsByStatus()[group.key]?.length) {
+              <div class="status-group">
+                <div class="status-group-head">
+                  <span [class]="badgeClass(group.key)">{{ group.labelKey | translate }}</span>
+                  <span class="status-count">{{ myAppsByStatus()[group.key].length }}</span>
+                </div>
+                <div class="app-chips">
+                  @for (a of myAppsByStatus()[group.key]; track a.appId) {
+                    <a class="app-chip" [routerLink]="['/appinfo', a.appId]">{{ a.appId }}</a>
+                  }
+                </div>
+              </div>
+            }
+          }
+        }
+      </div>
+
+      <!-- My recent deploys -->
+      <div class="card qa-card qa-card-wide">
+        <div class="qa-card-head">
+          <h3>{{ 'dashboard.recent_deploys' | translate }}</h3>
+          <div class="qa-card-sub">{{ 'dashboard.recent_deploys_sub' | translate }}</div>
+        </div>
+        @if (myRecentDeploys().length === 0) {
+          <div class="empty-state" style="padding: 1.5rem;">{{ 'dashboard.recent_deploys_empty' | translate }}</div>
+        } @else {
+          <ul class="recent-deploys">
+            @for (d of myRecentDeploys(); track d.appId + d.deployedAt) {
+              <li>
+                <span [class]="stateClass(d.state)">{{ d.state }}</span>
+                <a [routerLink]="['/appstatus', d.appId]" class="deploy-app">{{ d.appId }}</a>
+                @if (d.version) { <span class="deploy-version">{{ d.version }}</span> }
+                <span class="deploy-time">{{ d.deployedAt }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      <!-- Quick links -->
+      <div class="card qa-card qa-card-wide">
+        <div class="qa-card-head">
+          <h3>{{ 'dashboard.jump_to' | translate }}</h3>
+        </div>
+        <div class="quick-links">
+          <a class="quick-link" [routerLink]="['/appinfo']">
+            <span class="ql-icon">◆</span>
+            <span class="ql-label">{{ 'dashboard.jump_all_apps' | translate }}</span>
+          </a>
+          <a class="quick-link" [routerLink]="['/appstatus']">
+            <span class="ql-icon">◊</span>
+            <span class="ql-label">{{ 'dashboard.jump_all_deploys' | translate }}</span>
+          </a>
+          <a class="quick-link" [routerLink]="['/graph']">
+            <span class="ql-icon">⌬</span>
+            <span class="ql-label">{{ 'dashboard.jump_graph' | translate }}</span>
+          </a>
+          <a class="quick-link" [routerLink]="['/squads']">
+            <span class="ql-icon">◉</span>
+            <span class="ql-label">{{ 'dashboard.jump_all_squads' | translate }}</span>
+          </a>
+          @if (mySquads().length === 1) {
+            <a class="quick-link quick-link-primary" [routerLink]="['/squads', mySquads()[0].squad.key]">
+              <span class="ql-icon">→</span>
+              <span class="ql-label">{{ 'dashboard.jump_my_squad' | translate: { key: mySquads()[0].squad.key } }}</span>
+            </a>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── Catalog totals (always visible) ──────────────────────────── -->
+  <h3 class="section-title">{{ 'dashboard.catalog' | translate }}</h3>
   <div class="metric-grid">
     <a class="metric" [routerLink]="['/squads']">
-      <div class="metric-label">Squads</div>
-      <div class="metric-value">{{ squadCount() }}</div>
-      <div class="metric-sub">teams in catalog</div>
+      <div class="metric-label">{{ 'dashboard.metric_squads' | translate }}</div>
+      <div class="metric-value">{{ squads().length }}</div>
+      <div class="metric-sub">{{ 'dashboard.metric_squads_sub' | translate }}</div>
     </a>
     <a class="metric" [routerLink]="['/infra']">
-      <div class="metric-label">Infrastructure</div>
-      <div class="metric-value">{{ infraCount() }}</div>
-      <div class="metric-sub">deployment platforms</div>
+      <div class="metric-label">{{ 'dashboard.metric_infra' | translate }}</div>
+      <div class="metric-value">{{ infra() }}</div>
+      <div class="metric-sub">{{ 'dashboard.metric_infra_sub' | translate }}</div>
     </a>
     <a class="metric" [routerLink]="['/appinfo']">
-      <div class="metric-label">Applications</div>
-      <div class="metric-value">{{ appinfoCount() }}</div>
-      <div class="metric-sub">registered apps</div>
+      <div class="metric-label">{{ 'dashboard.metric_apps' | translate }}</div>
+      <div class="metric-value">{{ apps().length }}</div>
+      <div class="metric-sub">{{ 'dashboard.metric_apps_sub' | translate }}</div>
     </a>
     <a class="metric" [routerLink]="['/appstatus']">
-      <div class="metric-label">Deploy records</div>
-      <div class="metric-value">{{ appstatusCount() }}</div>
-      <div class="metric-sub">apps with deploy history</div>
+      <div class="metric-label">{{ 'dashboard.metric_deploys' | translate }}</div>
+      <div class="metric-value">{{ statuses().length }}</div>
+      <div class="metric-sub">{{ 'dashboard.metric_deploys_sub' | translate }}</div>
     </a>
   </div>
+
+  @if (globalFailedApps().length > 0) {
+    <a class="card alert-card" [routerLink]="['/appinfo']" [queryParams]="{ status: 'failed' }">
+      <div>
+        <strong>{{ 'dashboard.alert_failed' | translate: { count: globalFailedApps().length } }}</strong>
+      </div>
+      <span class="btn btn-ghost">{{ 'dashboard.alert_failed_cta' | translate }}</span>
+    </a>
+  }
 }

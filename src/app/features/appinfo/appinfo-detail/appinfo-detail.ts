@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AtlasApi } from '../../../core/api/atlas-api';
 import { AppInfo, AppStatus, ENVIRONMENTS, Environment } from '../../../core/api/models';
 
@@ -20,7 +21,7 @@ const ENV_URL_FIELDS: Record<Environment, keyof AppInfo> = {
 
 @Component({
   selector: 'app-appinfo-detail',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslateModule],
   templateUrl: './appinfo-detail.html',
   styleUrl: './appinfo-detail.scss',
 })

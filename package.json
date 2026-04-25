@@ -17,6 +17,8 @@
     "@angular/forms": "^21.2.0",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^17.0.0",
     "@types/js-yaml": "^4.0.9",
     "js-yaml": "^4.1.1",
     "rxjs": "~7.8.0",
@@ -32,5 +34,13 @@
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
+  },
+  "overrides": {
+    "vis-data": {
+      "uuid": "^14.0.0"
+    },
+    "vis-network": {
+      "uuid": "^14.0.0"
+    }
   }
 }

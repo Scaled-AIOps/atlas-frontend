@@ -1,23 +1,25 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { ListState } from '../list-state';
 
 @Component({
   selector: 'app-pagination',
-  imports: [],
+  imports: [TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="pg" [class.pg-empty]="state.total() === 0">
       <span class="pg-info">
         @if (state.total() === 0) {
-          No results
+          {{ 'pagination.no_results' | translate }}
         } @else {
-          Showing <strong>{{ state.pageStart() }}</strong>–<strong>{{ state.pageEnd() }}</strong>
-          of <strong>{{ state.total() }}</strong>
+          {{ 'pagination.showing' | translate }}
+          <strong>{{ state.pageStart() }}</strong>–<strong>{{ state.pageEnd() }}</strong>
+          {{ 'pagination.of' | translate }} <strong>{{ state.total() }}</strong>
         }
       </span>
       <span class="pg-spacer"></span>
-      <button class="pg-btn" [disabled]="!state.canPrev()" (click)="state.prevPage()">‹ Prev</button>
-      <button class="pg-btn" [disabled]="!state.canNext()" (click)="state.nextPage()">Next ›</button>
+      <button class="pg-btn" [disabled]="!state.canPrev()" (click)="state.prevPage()">{{ 'pagination.prev' | translate }}</button>
+      <button class="pg-btn" [disabled]="!state.canNext()" (click)="state.nextPage()">{{ 'pagination.next' | translate }}</button>
     </div>
   `,
   styles: [`

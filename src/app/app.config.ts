@@ -1,8 +1,17 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
+import { LocaleService } from './core/i18n/locale.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -10,5 +19,11 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(withFetch()),
+    provideTranslateService({
+      defaultLanguage: 'en',
+      fallbackLang: 'en',
+      loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),
+    }),
+    provideAppInitializer(() => inject(LocaleService).init()),
   ],
 };

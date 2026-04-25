@@ -1,27 +1,27 @@
 <div class="page-header">
   <div class="page-title">
-    <h1>Deployments</h1>
-    <div class="page-sub">Latest deploy state per app, per environment</div>
+    <h1>{{ 'deploys.title' | translate }}</h1>
+    <div class="page-sub">{{ 'deploys.subtitle' | translate }}</div>
   </div>
 </div>
 
-<app-list-controls [state]="state" exportName="appstatus" searchPlaceholder="Search apps…" />
+<app-list-controls [state]="state" exportName="appstatus" searchPlaceholderKey="deploys.search_placeholder" />
 
 <div class="card">
   @if (loading()) {
-    <div class="loading-block"><span class="spinner"></span> Loading deploy records…</div>
+    <div class="loading-block"><span class="spinner"></span> {{ 'deploys.loading' | translate }}</div>
   } @else if (error()) {
     <div class="loading-block">⚠ {{ error() }}</div>
   } @else if (state.total() === 0) {
     <div class="empty-state">
       <div class="empty-icon">◊</div>
-      <div class="empty-title">No deployment records match the current filters</div>
+      <div class="empty-title">{{ 'deploys.empty' | translate }}</div>
     </div>
   } @else {
     <table class="table">
       <thead>
         <tr>
-          <th>App ID</th>
+          <th>{{ 'deploys.col.app_id' | translate }}</th>
           @for (env of envs; track env) {
             <th>{{ env }}</th>
           }

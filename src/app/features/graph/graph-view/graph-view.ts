@@ -11,6 +11,7 @@ import {
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { KeyValuePipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Network, Options } from 'vis-network';
@@ -77,7 +78,7 @@ const STATUS_BORDER: Record<AppStatus, string> = {
 
 @Component({
   selector: 'app-graph-view',
-  imports: [FormsModule, KeyValuePipe],
+  imports: [FormsModule, KeyValuePipe, TranslateModule],
   templateUrl: './graph-view.html',
   styleUrl: './graph-view.scss',
 })

@@ -155,6 +155,26 @@ export class ListState<T> {
   }
 
   // ── Helpers ───────────────────────────────────────────────────────
+  /**
+   * Seed filters from a `?key=value&key=value2` query-param map. Only keys
+   * that match a configured `filterField` are honored; everything else is
+   * ignored, mirroring the atlas-service contract.
+   */
+  applyFilterParams(params: { keys: string[]; getAll(key: string): string[] }) {
+    const known = new Set(this.filterFields.map((f) => f.key));
+    const next = new Map<string, Set<string>>();
+    for (const k of params.keys) {
+      if (!known.has(k)) continue;
+      const vals = params.getAll(k).filter((v) => !!v);
+      if (vals.length === 0) continue;
+      next.set(k, new Set(vals));
+    }
+    if (next.size > 0) {
+      this.filters.set(next);
+      this.offset.set(0);
+    }
+  }
+
   /** Distinct values found in the source for a given filter field, sorted. */
   filterOptions(key: string): string[] {
     const ff = this.filterFields.find((f) => f.key === key);

@@ -1,34 +1,34 @@
 <div class="page-header">
   <div class="page-title">
-    <h1>Squads</h1>
-    <div class="page-sub">Teams registered in the catalog</div>
+    <h1>{{ 'squads.title' | translate }}</h1>
+    <div class="page-sub">{{ 'squads.subtitle' | translate }}</div>
   </div>
 </div>
 
-<app-list-controls [state]="state" exportName="squads" searchPlaceholder="Search squads, name, PO…" />
+<app-list-controls [state]="state" exportName="squads" searchPlaceholderKey="squads.search_placeholder" />
 
 <div class="card">
   @if (loading()) {
-    <div class="loading-block"><span class="spinner"></span> Loading squads…</div>
+    <div class="loading-block"><span class="spinner"></span> {{ 'squads.loading' | translate }}</div>
   } @else if (error()) {
     <div class="loading-block">⚠ {{ error() }}</div>
   } @else if (state.total() === 0) {
     <div class="empty-state">
       <div class="empty-icon">◉</div>
-      <div class="empty-title">No squads match the current filters</div>
+      <div class="empty-title">{{ 'squads.empty' | translate }}</div>
     </div>
   } @else {
     <table class="table">
       <thead>
         <tr>
-          <th>Key</th>
-          <th>Name</th>
-          <th>Tribe domain</th>
-          <th>Sub-domain</th>
-          <th>Tribe</th>
-          <th>PO</th>
-          <th>SM</th>
-          <th>Members</th>
+          <th>{{ 'squads.col.key' | translate }}</th>
+          <th>{{ 'squads.col.name' | translate }}</th>
+          <th>{{ 'squads.col.tribe_domain' | translate }}</th>
+          <th>{{ 'squads.col.sub_domain' | translate }}</th>
+          <th>{{ 'squads.col.tribe' | translate }}</th>
+          <th>{{ 'squads.col.po' | translate }}</th>
+          <th>{{ 'squads.col.sm' | translate }}</th>
+          <th>{{ 'squads.col.members' | translate }}</th>
         </tr>
       </thead>
       <tbody>

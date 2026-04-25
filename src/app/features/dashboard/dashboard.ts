@@ -5,14 +5,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AtlasApi } from '../../core/api/atlas-api';
+import { AuthService } from '../../core/auth/auth.service';
 import {
   AppInfo,
   AppStatus,
   AppStatusRecord,
   Squad,
 } from '../../core/api/models';
-
-const STORAGE_KEY = 'atlas.currentUserEmail';
 
 interface RoleFieldDef {
   key: keyof Squad;
@@ -46,6 +45,7 @@ interface MySquad {
 })
 export class Dashboard implements OnInit {
   private api = inject(AtlasApi);
+  private auth = inject(AuthService);
 
   loading = signal(true);
   error = signal<string | null>(null);
@@ -56,8 +56,8 @@ export class Dashboard implements OnInit {
   apps = signal<AppInfo[]>([]);
   statuses = signal<AppStatusRecord[]>([]);
 
-  // Current user
-  email = signal('');
+  // Current user — sourced from the auth session.
+  readonly email = this.auth.email;
 
   // Distinct emails extracted from every role field across every squad — feeds the <datalist>.
   emailOptions = computed<string[]>(() => {
@@ -132,9 +132,6 @@ export class Dashboard implements OnInit {
 
   // ── Lifecycle ──────────────────────────────────────────────────────
   ngOnInit() {
-    const stored = (typeof localStorage !== 'undefined' && localStorage.getItem(STORAGE_KEY)) || '';
-    this.email.set(stored);
-
     forkJoin({
       squads: this.api.listSquads().pipe(catchError(() => of([] as Squad[]))),
       infra: this.api.listInfra().pipe(catchError(() => of([]))),
@@ -153,18 +150,6 @@ export class Dashboard implements OnInit {
         this.loading.set(false);
       },
     });
-  }
-
-  setEmail(value: string) {
-    const v = value.trim();
-    this.email.set(v);
-    if (typeof localStorage === 'undefined') return;
-    if (v) localStorage.setItem(STORAGE_KEY, v);
-    else localStorage.removeItem(STORAGE_KEY);
-  }
-
-  clearEmail() {
-    this.setEmail('');
   }
 
   badgeClass(status?: string): string {

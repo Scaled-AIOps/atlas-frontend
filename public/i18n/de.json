@@ -26,6 +26,31 @@
     "clear": "Leeren",
     "clear_all": "Alle entfernen"
   },
+  "shell": {
+    "sign_out": "Abmelden"
+  },
+  "login": {
+    "title": "Bei Atlas anmelden",
+    "subtitle": "Mit deiner Jira-E-Mail und einem Jira-API-Token einloggen.",
+    "email_label": "Jira-E-Mail",
+    "email_placeholder": "name@beispiel.de",
+    "jira_token_label": "Jira-API-Token",
+    "jira_token_placeholder": "ATATT3xFfGF0…",
+    "jira_help": "Jira-API-Token erstellen",
+    "sign_in": "Anmelden",
+    "signing_in": "Anmeldung läuft…",
+    "footer": "Atlas — Squad- & Service-Katalog",
+    "error": {
+      "INVALID_INPUT": "Bitte alle Felder ausfüllen.",
+      "NOT_MEMBER": "Diese E-Mail ist in keinem Squad als Mitglied registriert.",
+      "JIRA_AUTH_FAILED": "Jira hat die E-Mail-/Token-Kombination abgelehnt.",
+      "EMAIL_MISMATCH": "Die eingegebene E-Mail passt nicht zum Jira-Account hinter diesem Token.",
+      "JIRA_BASE_URL_NOT_CONFIGURED": "Jira-Login ist auf diesem Server nicht aktiviert. Bitte einen Admin kontaktieren.",
+      "JIRA_UNREACHABLE": "Server konnte Jira nicht erreichen. Bitte später erneut versuchen.",
+      "NO_TOKEN_CONFIGURED": "Server falsch konfiguriert (kein AUTH_TOKEN). Bitte einen Admin kontaktieren.",
+      "UNKNOWN": "Anmeldung fehlgeschlagen."
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Überblick über Squads, Infrastruktur und Anwendungen",

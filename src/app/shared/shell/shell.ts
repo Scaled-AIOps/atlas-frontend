@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Locale, LocaleService, SUPPORTED_LOCALES } from '../../core/i18n/locale.service';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-shell',
@@ -11,8 +12,11 @@ import { Locale, LocaleService, SUPPORTED_LOCALES } from '../../core/i18n/locale
 })
 export class Shell {
   private locale = inject(LocaleService);
+  private auth = inject(AuthService);
   readonly current = this.locale.current;
   readonly locales = SUPPORTED_LOCALES;
+  readonly userEmail = this.auth.email;
+  readonly userName = this.auth.displayName;
 
   readonly nav = [
     { path: '/dashboard', labelKey: 'nav.dashboard', icon: '◈' },
@@ -23,7 +27,7 @@ export class Shell {
     { path: '/appstatus', labelKey: 'nav.appstatus', icon: '◊' },
   ];
 
-  setLocale(value: string) {
-    this.locale.set(value as Locale);
-  }
+  setLocale(value: string) { this.locale.set(value as Locale); }
+
+  signOut() { this.auth.logout(); }
 }

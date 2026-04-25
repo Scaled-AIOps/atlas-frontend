@@ -126,6 +126,59 @@
     gap: 0.75rem;
   }
 
+  .user-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0.7rem 0.2rem 0.25rem;
+    background: var(--blue-50);
+    border: 1px solid var(--blue-100);
+    border-radius: 999px;
+    max-width: 220px;
+
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-600), var(--blue-800));
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.78rem;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .user-meta {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      min-width: 0;
+    }
+
+    .user-name {
+      color: var(--text-strong);
+      font-weight: 500;
+      font-size: 0.82rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-via {
+      color: var(--blue-700);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+  }
+
+  .sign-out {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.78rem;
+  }
+
   .lang-picker {
     display: inline-flex;
     align-items: center;

@@ -10,34 +10,7 @@
 } @else if (error()) {
   <div class="card loading-block">⚠ {{ error() }}</div>
 } @else {
-  <!-- ── Identity picker ───────────────────────────────────────────── -->
-  <div class="card identity-card">
-    <div class="identity-row">
-      <div class="identity-label">
-        <div class="identity-eyebrow">{{ 'dashboard.quick_actions' | translate }}</div>
-        <div class="identity-help">{{ 'dashboard.quick_actions_help' | translate }}</div>
-      </div>
-      <div class="identity-input">
-        <input
-          type="search"
-          list="email-options"
-          [placeholder]="'dashboard.email_placeholder' | translate"
-          [ngModel]="email()"
-          (ngModelChange)="setEmail($event)"
-        />
-        <datalist id="email-options">
-          @for (e of emailOptions(); track e) {
-            <option [value]="e"></option>
-          }
-        </datalist>
-        @if (email()) {
-          <button class="btn btn-ghost identity-clear" (click)="clearEmail()">{{ 'common.clear' | translate }}</button>
-        }
-      </div>
-    </div>
-  </div>
-
-  <!-- ── My role view (when an email is selected) ──────────────────── -->
+  <!-- ── My role view (signed-in user from auth) ──────────────────── -->
   @if (email() && mySquads().length === 0) {
     <div class="card empty-state">
       <div class="empty-icon">◌</div>

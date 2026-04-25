@@ -1,0 +1,69 @@
+<div class="login-shell">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-mark">A</div>
+      <div>
+        <div class="login-title">{{ 'app.brand' | translate }}</div>
+        <div class="login-tag">{{ 'app.brand_tag' | translate }}</div>
+      </div>
+    </div>
+
+    <h1 class="login-h1">{{ 'login.title' | translate }}</h1>
+    <p class="login-sub">{{ 'login.subtitle' | translate }}</p>
+
+    <form (submit)="$event.preventDefault(); submit()">
+      <label class="field">
+        <span>{{ 'login.email_label' | translate }}</span>
+        <input
+          type="email"
+          autocomplete="email"
+          [placeholder]="'login.email_placeholder' | translate"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+          name="email"
+          required
+        />
+      </label>
+
+      <label class="field">
+        <span>{{ 'login.jira_token_label' | translate }}</span>
+        <input
+          type="password"
+          autocomplete="current-password"
+          [placeholder]="'login.jira_token_placeholder' | translate"
+          [ngModel]="jiraToken()"
+          (ngModelChange)="jiraToken.set($event)"
+          name="jiraToken"
+          required
+        />
+      </label>
+
+      <p class="hint">
+        <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank" rel="noopener">
+          {{ 'login.jira_help' | translate }} ↗
+        </a>
+      </p>
+
+      @if (errorCode(); as code) {
+        <div class="error">
+          <strong>{{ ('login.error.' + code) | translate }}</strong>
+          @if (errorMessage()) {
+            <span class="error-detail">— {{ errorMessage() }}</span>
+          }
+        </div>
+      }
+
+      <button class="btn btn-primary submit" [disabled]="!canSubmit()">
+        @if (loading()) {
+          <span class="spinner"></span> {{ 'login.signing_in' | translate }}
+        } @else {
+          {{ 'login.sign_in' | translate }} →
+        }
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <span>{{ 'login.footer' | translate }}</span>
+    </div>
+  </div>
+</div>

@@ -30,6 +30,18 @@
     <header class="topbar">
       <div class="topbar-title">{{ 'app.title' | translate }}</div>
       <div class="topbar-actions">
+        @if (userEmail()) {
+          <div class="user-chip" [title]="userEmail()">
+            <span class="user-avatar">{{ (userName() || userEmail()).charAt(0).toUpperCase() }}</span>
+            <span class="user-meta">
+              <span class="user-name">{{ userName() || userEmail() }}</span>
+              <span class="user-via">jira</span>
+            </span>
+          </div>
+          <button class="btn btn-ghost sign-out" (click)="signOut()" [title]="'shell.sign_out' | translate">
+            {{ 'shell.sign_out' | translate }}
+          </button>
+        }
         <label class="lang-picker">
           <span class="lang-label">{{ 'nav.language' | translate }}</span>
           <select (change)="setLocale($any($event.target).value)">

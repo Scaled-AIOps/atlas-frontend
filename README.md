@@ -8,8 +8,9 @@ Features:
 - **Graph view** — 5-tier left-to-right hierarchy (Tribe Domain → Sub-domain → Tribe → Squad → App), each tribe domain rendered as a "river of colour" with curved edges; click to focus a branch, double-click to drill into the resource
 - **List pages** for squads, infra, applications, deployments — each backed by a shared toolbar with **search**, **filter chips**, **sort**, **pagination**, and **CSV / JSON / YAML export**
 - **Detail pages** for every resource, with cross-links between squad ↔ app ↔ infra ↔ deploy history
+- **Jira-based login** — sign in with your Jira email + a Jira API token; the server validates against `${JIRA_BASE_URL}/rest/api/3/myself` and exchanges that for a bearer token (auto-attached to every API call)
 - **Multi-language** UI — English and German, switchable from the topbar; persists in `localStorage`
-- **Role-aware quick actions** on the dashboard — pick your email to see your squads, your apps grouped by status, your recent deploys, and a one-click jump to your squad
+- **Role-aware quick actions** on the dashboard — see your squads, your apps grouped by status, your recent deploys, and a one-click jump to your squad
 - **Blue colour theme** (CSS variables) with a fixed sidebar shell
 
 The whole app is **zoneless** (Angular 21 default) and uses **signals** end-to-end for reactivity.
@@ -53,6 +54,10 @@ atlas-frontend/
 │       │   ├── api/
 │       │   │   ├── atlas-api.ts          # injectable HttpClient wrapper for all 4 resources
 │       │   │   └── models.ts             # TypeScript interfaces matching the API
+│       │   ├── auth/
+│       │   │   ├── auth.service.ts       # signal-backed { token, email, squads }; persists in localStorage
+│       │   │   ├── auth.interceptor.ts   # adds Bearer header; on 401 → logout + /login
+│       │   │   └── auth.guard.ts         # CanActivate redirect to /login?returnUrl=…
 │       │   └── i18n/
 │       │       └── locale.service.ts     # signal-backed locale state + localStorage persistence
 │       ├── shared/
@@ -62,7 +67,8 @@ atlas-frontend/
 │       │   ├── pagination/               # "Showing X-Y of Z" + Prev/Next
 │       │   └── export.ts                 # CSV / JSON / YAML serializers + Blob download
 │       └── features/
-│           ├── dashboard/                # 4 metric cards
+│           ├── login/                    # Jira email + API-token form
+│           ├── dashboard/                # 4 metric cards + role-aware quick actions
 │           ├── graph/graph-view/         # vis-network 5-tier hierarchy
 │           ├── squads/{list,detail}/
 │           ├── infra/{list,detail}/
@@ -116,6 +122,19 @@ Click any node → side panel slides in with its metadata and a clickable child 
 ### API
 
 `AtlasApi` (`core/api/atlas-api.ts`) is a thin `HttpClient` wrapper. Base URL comes from `environment.apiBaseUrl`. In dev that's `/api`, proxied by `ng serve` to `http://localhost:3000` (atlas-service). In production the SPA is served from the same origin as the API, so `/api` works there too.
+
+### Authentication
+
+Single login flow: **Jira API token**. The user enters their Jira email + API token; the SPA POSTs to `/api/auth/login/jira`; on 200, the bearer token is persisted in `localStorage.atlas.auth` and attached to every subsequent API call by `auth.interceptor.ts`. A 401 anywhere in the API surface clears the session and routes back to `/login`.
+
+Routing:
+- `/login` is the only unguarded route
+- Every other route sits under the `Shell` parent which has `canActivate: [authGuard]` + `canActivateChild: [authGuard]`
+- The guard redirects to `/login?returnUrl=…` so users land back on the page they tried to open
+
+Sign-out is in the topbar — clears the session, removes the localStorage key, and routes to `/login`.
+
+The atlas-service end requires `JIRA_BASE_URL=https://<workspace>.atlassian.net` to be set on the server; without it, login attempts fail with a friendly i18n error rather than silently breaking. See [atlas-service README — Authentication](https://github.com/Scaled-AIOps/atlas-service#authentication) for the server-side details.
 
 ### Internationalisation
 

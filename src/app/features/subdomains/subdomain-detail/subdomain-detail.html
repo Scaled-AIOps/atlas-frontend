@@ -1,0 +1,54 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>{{ 'subdomains_detail.title' | translate: { name: sub()?.name || '…' } }}</h1>
+  </div>
+  <a class="btn btn-ghost" [routerLink]="['/subdomains']">{{ 'subdomains_detail.back' | translate }}</a>
+</div>
+
+@if (loading()) {
+  <div class="card loading-block"><span class="spinner"></span> {{ 'common.loading' | translate }}</div>
+} @else if (error()) {
+  <div class="card loading-block">⚠ {{ error() }}</div>
+} @else if (sub(); as s) {
+  <div class="card">
+    <div class="detail-grid">
+      <div class="field"><div class="label">{{ 'subdomains_detail.field.name' | translate }}</div><div class="value">{{ s.name }}</div></div>
+      <div class="field">
+        <div class="label">{{ 'subdomains_detail.field.tribe_domain' | translate }}</div>
+        <div class="value"><a [routerLink]="['/tribedomains', s.tribeDomain]">{{ s.tribeDomain }}</a></div>
+      </div>
+      <div class="field"><div class="label">{{ 'subdomains_detail.field.lead' | translate }}</div><div class="value">{{ s.lead || '—' }}</div></div>
+      <div class="field"><div class="label">{{ 'subdomains_detail.field.description' | translate }}</div><div class="value">{{ s.description || '—' }}</div></div>
+    </div>
+  </div>
+
+  <h3 style="margin-top: 1.5rem;">{{ 'subdomains_detail.children' | translate: { count: children().length } }}</h3>
+  <div class="card">
+    @if (children().length === 0) {
+      <div class="empty-state" style="padding: 1.5rem;">{{ 'subdomains_detail.no_children' | translate }}</div>
+    } @else {
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ 'tribes.col.name' | translate }}</th>
+            <th>{{ 'tribes.col.lead' | translate }}</th>
+            <th>{{ 'tribes.col.release_manager' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of children(); track t.name) {
+            <tr>
+              <td><a [routerLink]="['/tribes', t.name]">{{ t.name }}</a></td>
+              <td>{{ t.lead || '—' }}</td>
+              <td>
+                @if (t.releaseManager) {
+                  <span class="badge badge-success">{{ t.releaseManager }}</span>
+                } @else { — }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+}

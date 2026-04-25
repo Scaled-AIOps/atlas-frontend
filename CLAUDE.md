@@ -47,6 +47,9 @@ Angular 21 SPA that consumes [atlas-service](https://github.com/Scaled-AIOps/atl
 
 | Resource | Path | List shape | Notes |
 |---|---|---|---|
+| TribeDomains | `/tribedomains` | array | top tier; carries `lead` |
+| SubDomains | `/subdomains` | array | second tier; FK to tribeDomain.name; carries `lead` |
+| Tribes | `/tribes` | array | third tier; FKs to subDomain + tribeDomain; carries `lead` AND `releaseManager` |
 | Squads | `/squads` | array | filter/sort/paginate via query params (handled server-side) but we apply them client-side too |
 | Infra | `/infra` | array | env enum: `local \| dev \| int \| uat \| prd` |
 | AppInfo | `/appinfo` | array | flat platform fields per env: `localPlatform`, `devPlatform`, `intPlatform`, `uatPlatform`, `prdPlatform` |

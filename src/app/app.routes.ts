@@ -27,6 +27,48 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'tribedomains',
+        loadComponent: () =>
+          import('./features/tribedomains/tribedomain-list/tribedomain-list').then(
+            (m) => m.TribedomainList,
+          ),
+      },
+      {
+        path: 'tribedomains/:name',
+        loadComponent: () =>
+          import('./features/tribedomains/tribedomain-detail/tribedomain-detail').then(
+            (m) => m.TribedomainDetail,
+          ),
+      },
+      {
+        path: 'subdomains',
+        loadComponent: () =>
+          import('./features/subdomains/subdomain-list/subdomain-list').then(
+            (m) => m.SubdomainList,
+          ),
+      },
+      {
+        path: 'subdomains/:name',
+        loadComponent: () =>
+          import('./features/subdomains/subdomain-detail/subdomain-detail').then(
+            (m) => m.SubdomainDetail,
+          ),
+      },
+      {
+        path: 'tribes',
+        loadComponent: () =>
+          import('./features/tribes/tribe-list/tribe-list').then(
+            (m) => m.TribeList,
+          ),
+      },
+      {
+        path: 'tribes/:name',
+        loadComponent: () =>
+          import('./features/tribes/tribe-detail/tribe-detail').then(
+            (m) => m.TribeDetail,
+          ),
+      },
+      {
         path: 'squads',
         loadComponent: () =>
           import('./features/squads/squads-list/squads-list').then(

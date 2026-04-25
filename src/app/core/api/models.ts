@@ -2,6 +2,39 @@
 export type Environment = 'local' | 'dev' | 'int' | 'uat' | 'prd';
 export const ENVIRONMENTS: Environment[] = ['local', 'dev', 'int', 'uat', 'prd'];
 
+// ── Tribal hierarchy ─────────────────────────────────────────────────────
+export interface TribeDomain {
+  name: string;
+  lead?: string;
+  description?: string;
+  tags?: Record<string, unknown>;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface SubDomain {
+  name: string;
+  tribeDomain: string;
+  lead?: string;
+  description?: string;
+  tags?: Record<string, unknown>;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Tribe {
+  name: string;
+  subDomain: string;
+  tribeDomain: string;
+  lead?: string;
+  releaseManager?: string;
+  description?: string;
+  confluence?: string;
+  tags?: Record<string, unknown>;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 // ── Squad ────────────────────────────────────────────────────────────────
 export interface Squad {
   key: string;

@@ -20,12 +20,15 @@ export class Shell {
   readonly displayName = this.auth.displayName;
 
   readonly nav = [
-    { path: '/dashboard', labelKey: 'nav.dashboard', icon: '◈' },
-    { path: '/graph',     labelKey: 'nav.graph',     icon: '⌬' },
-    { path: '/squads',    labelKey: 'nav.squads',    icon: '◉' },
-    { path: '/infra',     labelKey: 'nav.infra',     icon: '◇' },
-    { path: '/appinfo',   labelKey: 'nav.appinfo',   icon: '◆' },
-    { path: '/appstatus', labelKey: 'nav.appstatus', icon: '◊' },
+    { path: '/dashboard',    labelKey: 'nav.dashboard',    icon: '◈' },
+    { path: '/graph',        labelKey: 'nav.graph',        icon: '⌬' },
+    { path: '/tribedomains', labelKey: 'nav.tribedomains', icon: '⬡' },
+    { path: '/subdomains',   labelKey: 'nav.subdomains',   icon: '⬢' },
+    { path: '/tribes',       labelKey: 'nav.tribes',       icon: '◫' },
+    { path: '/squads',       labelKey: 'nav.squads',       icon: '◉' },
+    { path: '/infra',        labelKey: 'nav.infra',        icon: '◇' },
+    { path: '/appinfo',      labelKey: 'nav.appinfo',      icon: '◆' },
+    { path: '/appstatus',    labelKey: 'nav.appstatus',    icon: '◊' },
   ];
 
   setLocale(value: string) { this.locale.set(value as Locale); }

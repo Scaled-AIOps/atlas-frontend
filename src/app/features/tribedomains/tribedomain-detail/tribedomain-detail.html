@@ -1,0 +1,44 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>{{ 'tribedomains_detail.title' | translate: { name: domain()?.name || '…' } }}</h1>
+  </div>
+  <a class="btn btn-ghost" [routerLink]="['/tribedomains']">{{ 'tribedomains_detail.back' | translate }}</a>
+</div>
+
+@if (loading()) {
+  <div class="card loading-block"><span class="spinner"></span> {{ 'common.loading' | translate }}</div>
+} @else if (error()) {
+  <div class="card loading-block">⚠ {{ error() }}</div>
+} @else if (domain(); as d) {
+  <div class="card">
+    <div class="detail-grid">
+      <div class="field"><div class="label">{{ 'tribedomains_detail.field.name' | translate }}</div><div class="value">{{ d.name }}</div></div>
+      <div class="field"><div class="label">{{ 'tribedomains_detail.field.lead' | translate }}</div><div class="value">{{ d.lead || '—' }}</div></div>
+      <div class="field"><div class="label">{{ 'tribedomains_detail.field.description' | translate }}</div><div class="value">{{ d.description || '—' }}</div></div>
+    </div>
+  </div>
+
+  <h3 style="margin-top: 1.5rem;">{{ 'tribedomains_detail.children' | translate: { count: children().length } }}</h3>
+  <div class="card">
+    @if (children().length === 0) {
+      <div class="empty-state" style="padding: 1.5rem;">{{ 'tribedomains_detail.no_children' | translate }}</div>
+    } @else {
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ 'subdomains.col.name' | translate }}</th>
+            <th>{{ 'subdomains.col.lead' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of children(); track s.name) {
+            <tr>
+              <td><a [routerLink]="['/subdomains', s.name]">{{ s.name }}</a></td>
+              <td>{{ s.lead || '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+}

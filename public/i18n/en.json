@@ -8,6 +8,9 @@
   "nav": {
     "dashboard": "Dashboard",
     "graph": "Graph view",
+    "tribedomains": "Tribe domains",
+    "subdomains": "Sub-domains",
+    "tribes": "Tribes",
     "squads": "Squads",
     "infra": "Infrastructure",
     "appinfo": "Applications",
@@ -129,6 +132,79 @@
     "no_results": "No results",
     "prev": "‹ Prev",
     "next": "Next ›"
+  },
+  "tribedomains": {
+    "title": "Tribe domains",
+    "subtitle": "Top tier of the org hierarchy — owns one or more sub-domains and a domain lead.",
+    "search_placeholder": "Search domains, lead, description…",
+    "empty": "No tribe domains match the current filters",
+    "col": {
+      "name": "Name",
+      "lead": "Domain lead",
+      "description": "Description"
+    }
+  },
+  "tribedomains_detail": {
+    "title": "Tribe domain: {{name}}",
+    "back": "← Back to tribe domains",
+    "children": "Sub-domains ({{count}})",
+    "no_children": "No sub-domains under this domain yet",
+    "field": {
+      "name": "Name",
+      "lead": "Lead",
+      "description": "Description"
+    }
+  },
+  "subdomains": {
+    "title": "Sub-domains",
+    "subtitle": "Second tier — group of tribes inside a tribe domain.",
+    "search_placeholder": "Search sub-domains, lead, description…",
+    "empty": "No sub-domains match the current filters",
+    "col": {
+      "name": "Name",
+      "tribe_domain": "Tribe domain",
+      "lead": "Lead"
+    }
+  },
+  "subdomains_detail": {
+    "title": "Sub-domain: {{name}}",
+    "back": "← Back to sub-domains",
+    "children": "Tribes ({{count}})",
+    "no_children": "No tribes under this sub-domain yet",
+    "field": {
+      "name": "Name",
+      "tribe_domain": "Tribe domain",
+      "lead": "Lead",
+      "description": "Description"
+    }
+  },
+  "tribes": {
+    "title": "Tribes",
+    "subtitle": "Third tier — owns the tribe lead and the **release manager** for every app under it.",
+    "search_placeholder": "Search tribes, lead, RM…",
+    "empty": "No tribes match the current filters",
+    "col": {
+      "name": "Name",
+      "tribe_domain": "Tribe domain",
+      "sub_domain": "Sub-domain",
+      "lead": "Lead",
+      "release_manager": "Release manager"
+    }
+  },
+  "tribes_detail": {
+    "title": "Tribe: {{name}}",
+    "back": "← Back to tribes",
+    "squads": "Squads under this tribe ({{count}})",
+    "no_squads": "No squads in this tribe yet",
+    "field": {
+      "name": "Name",
+      "tribe_domain": "Tribe domain",
+      "sub_domain": "Sub-domain",
+      "lead": "Lead",
+      "release_manager": "Release manager",
+      "confluence": "Confluence",
+      "description": "Description"
+    }
   },
   "squads": {
     "title": "Squads",

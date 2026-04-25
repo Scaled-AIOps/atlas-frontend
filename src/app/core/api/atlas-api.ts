@@ -9,12 +9,39 @@ import {
   AppStatusRecord,
   DeployEntry,
   Environment,
+  TribeDomain,
+  SubDomain,
+  Tribe,
 } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class AtlasApi {
   private http = inject(HttpClient);
   private base = environment.apiBaseUrl;
+
+  // ── Tribe Domains ─────────────────────────────────────────────────────
+  listTribeDomains(): Observable<TribeDomain[]> {
+    return this.http.get<TribeDomain[]>(`${this.base}/tribedomains`);
+  }
+  getTribeDomain(name: string): Observable<TribeDomain> {
+    return this.http.get<TribeDomain>(`${this.base}/tribedomains/${encodeURIComponent(name)}`);
+  }
+
+  // ── Sub-Domains ───────────────────────────────────────────────────────
+  listSubDomains(): Observable<SubDomain[]> {
+    return this.http.get<SubDomain[]>(`${this.base}/subdomains`);
+  }
+  getSubDomain(name: string): Observable<SubDomain> {
+    return this.http.get<SubDomain>(`${this.base}/subdomains/${encodeURIComponent(name)}`);
+  }
+
+  // ── Tribes ────────────────────────────────────────────────────────────
+  listTribes(): Observable<Tribe[]> {
+    return this.http.get<Tribe[]>(`${this.base}/tribes`);
+  }
+  getTribe(name: string): Observable<Tribe> {
+    return this.http.get<Tribe>(`${this.base}/tribes/${encodeURIComponent(name)}`);
+  }
 
   // ── Squads ────────────────────────────────────────────────────────────
   listSquads(): Observable<Squad[]> {

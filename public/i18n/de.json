@@ -8,6 +8,9 @@
   "nav": {
     "dashboard": "Dashboard",
     "graph": "Graphansicht",
+    "tribedomains": "Tribe-Domains",
+    "subdomains": "Sub-Domains",
+    "tribes": "Tribes",
     "squads": "Squads",
     "infra": "Infrastruktur",
     "appinfo": "Anwendungen",
@@ -129,6 +132,79 @@
     "no_results": "Keine Ergebnisse",
     "prev": "‹ Zurück",
     "next": "Weiter ›"
+  },
+  "tribedomains": {
+    "title": "Tribe-Domains",
+    "subtitle": "Oberste Ebene der Org-Hierarchie — enthält Sub-Domains und einen Domain-Lead.",
+    "search_placeholder": "Domains, Lead, Beschreibung suchen…",
+    "empty": "Keine Tribe-Domains passen zu den Filtern",
+    "col": {
+      "name": "Name",
+      "lead": "Domain-Lead",
+      "description": "Beschreibung"
+    }
+  },
+  "tribedomains_detail": {
+    "title": "Tribe-Domain: {{name}}",
+    "back": "← Zurück zu Tribe-Domains",
+    "children": "Sub-Domains ({{count}})",
+    "no_children": "Noch keine Sub-Domains unter dieser Domain",
+    "field": {
+      "name": "Name",
+      "lead": "Lead",
+      "description": "Beschreibung"
+    }
+  },
+  "subdomains": {
+    "title": "Sub-Domains",
+    "subtitle": "Zweite Ebene — Gruppe von Tribes innerhalb einer Tribe-Domain.",
+    "search_placeholder": "Sub-Domains, Lead, Beschreibung suchen…",
+    "empty": "Keine Sub-Domains passen zu den Filtern",
+    "col": {
+      "name": "Name",
+      "tribe_domain": "Tribe-Domain",
+      "lead": "Lead"
+    }
+  },
+  "subdomains_detail": {
+    "title": "Sub-Domain: {{name}}",
+    "back": "← Zurück zu Sub-Domains",
+    "children": "Tribes ({{count}})",
+    "no_children": "Noch keine Tribes unter dieser Sub-Domain",
+    "field": {
+      "name": "Name",
+      "tribe_domain": "Tribe-Domain",
+      "lead": "Lead",
+      "description": "Beschreibung"
+    }
+  },
+  "tribes": {
+    "title": "Tribes",
+    "subtitle": "Dritte Ebene — verantwortlich für den Tribe-Lead und den **Release Manager** aller Apps darunter.",
+    "search_placeholder": "Tribes, Lead, RM suchen…",
+    "empty": "Keine Tribes passen zu den Filtern",
+    "col": {
+      "name": "Name",
+      "tribe_domain": "Tribe-Domain",
+      "sub_domain": "Sub-Domain",
+      "lead": "Lead",
+      "release_manager": "Release Manager"
+    }
+  },
+  "tribes_detail": {
+    "title": "Tribe: {{name}}",
+    "back": "← Zurück zu Tribes",
+    "squads": "Squads in diesem Tribe ({{count}})",
+    "no_squads": "Noch keine Squads in diesem Tribe",
+    "field": {
+      "name": "Name",
+      "tribe_domain": "Tribe-Domain",
+      "sub_domain": "Sub-Domain",
+      "lead": "Lead",
+      "release_manager": "Release Manager",
+      "confluence": "Confluence",
+      "description": "Beschreibung"
+    }
   },
   "squads": {
     "title": "Squads",

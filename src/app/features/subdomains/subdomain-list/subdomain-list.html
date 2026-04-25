@@ -1,0 +1,41 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>{{ 'subdomains.title' | translate }}</h1>
+    <div class="page-sub">{{ 'subdomains.subtitle' | translate }}</div>
+  </div>
+</div>
+
+<app-list-controls [state]="state" exportName="subdomains" searchPlaceholderKey="subdomains.search_placeholder" />
+
+<div class="card">
+  @if (loading()) {
+    <div class="loading-block"><span class="spinner"></span> {{ 'common.loading' | translate }}</div>
+  } @else if (error()) {
+    <div class="loading-block">⚠ {{ error() }}</div>
+  } @else if (state.total() === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">◇</div>
+      <div class="empty-title">{{ 'subdomains.empty' | translate }}</div>
+    </div>
+  } @else {
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ 'subdomains.col.name' | translate }}</th>
+          <th>{{ 'subdomains.col.tribe_domain' | translate }}</th>
+          <th>{{ 'subdomains.col.lead' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of state.page(); track s.name) {
+          <tr>
+            <td><a [routerLink]="['/subdomains', s.name]">{{ s.name }}</a></td>
+            <td><a [routerLink]="['/tribedomains', s.tribeDomain]">{{ s.tribeDomain }}</a></td>
+            <td>{{ s.lead || '—' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+  <app-pagination [state]="state" />
+</div>

@@ -1,0 +1,49 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>{{ 'tribes.title' | translate }}</h1>
+    <div class="page-sub">{{ 'tribes.subtitle' | translate }}</div>
+  </div>
+</div>
+
+<app-list-controls [state]="state" exportName="tribes" searchPlaceholderKey="tribes.search_placeholder" />
+
+<div class="card">
+  @if (loading()) {
+    <div class="loading-block"><span class="spinner"></span> {{ 'common.loading' | translate }}</div>
+  } @else if (error()) {
+    <div class="loading-block">⚠ {{ error() }}</div>
+  } @else if (state.total() === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">⌬</div>
+      <div class="empty-title">{{ 'tribes.empty' | translate }}</div>
+    </div>
+  } @else {
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ 'tribes.col.name' | translate }}</th>
+          <th>{{ 'tribes.col.tribe_domain' | translate }}</th>
+          <th>{{ 'tribes.col.sub_domain' | translate }}</th>
+          <th>{{ 'tribes.col.lead' | translate }}</th>
+          <th>{{ 'tribes.col.release_manager' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (t of state.page(); track t.name) {
+          <tr>
+            <td><a [routerLink]="['/tribes', t.name]">{{ t.name }}</a></td>
+            <td><a [routerLink]="['/tribedomains', t.tribeDomain]">{{ t.tribeDomain }}</a></td>
+            <td><a [routerLink]="['/subdomains', t.subDomain]">{{ t.subDomain }}</a></td>
+            <td>{{ t.lead || '—' }}</td>
+            <td>
+              @if (t.releaseManager) {
+                <span class="badge badge-success">{{ t.releaseManager }}</span>
+              } @else { — }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+  <app-pagination [state]="state" />
+</div>

@@ -1,0 +1,73 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>{{ 'tribes_detail.title' | translate: { name: tribe()?.name || '…' } }}</h1>
+    <div class="page-sub">{{ tribe()?.description }}</div>
+  </div>
+  <a class="btn btn-ghost" [routerLink]="['/tribes']">{{ 'tribes_detail.back' | translate }}</a>
+</div>
+
+@if (loading()) {
+  <div class="card loading-block"><span class="spinner"></span> {{ 'common.loading' | translate }}</div>
+} @else if (error()) {
+  <div class="card loading-block">⚠ {{ error() }}</div>
+} @else if (tribe(); as t) {
+  <div class="card">
+    <div class="detail-grid">
+      <div class="field"><div class="label">{{ 'tribes_detail.field.name' | translate }}</div><div class="value">{{ t.name }}</div></div>
+      <div class="field">
+        <div class="label">{{ 'tribes_detail.field.tribe_domain' | translate }}</div>
+        <div class="value"><a [routerLink]="['/tribedomains', t.tribeDomain]">{{ t.tribeDomain }}</a></div>
+      </div>
+      <div class="field">
+        <div class="label">{{ 'tribes_detail.field.sub_domain' | translate }}</div>
+        <div class="value"><a [routerLink]="['/subdomains', t.subDomain]">{{ t.subDomain }}</a></div>
+      </div>
+      <div class="field"><div class="label">{{ 'tribes_detail.field.lead' | translate }}</div><div class="value">{{ t.lead || '—' }}</div></div>
+      <div class="field">
+        <div class="label">{{ 'tribes_detail.field.release_manager' | translate }}</div>
+        <div class="value">
+          @if (t.releaseManager) {
+            <span class="badge badge-success">{{ t.releaseManager }}</span>
+          } @else { — }
+        </div>
+      </div>
+      <div class="field">
+        <div class="label">{{ 'tribes_detail.field.confluence' | translate }}</div>
+        <div class="value">
+          @if (t.confluence) {
+            <a [href]="t.confluence" target="_blank" rel="noopener">{{ t.confluence }}</a>
+          } @else { — }
+        </div>
+      </div>
+      <div class="field"><div class="label">{{ 'tribes_detail.field.description' | translate }}</div><div class="value">{{ t.description || '—' }}</div></div>
+    </div>
+  </div>
+
+  <h3 style="margin-top: 1.5rem;">{{ 'tribes_detail.squads' | translate: { count: squadsInTribe().length } }}</h3>
+  <div class="card">
+    @if (squadsInTribe().length === 0) {
+      <div class="empty-state" style="padding: 1.5rem;">{{ 'tribes_detail.no_squads' | translate }}</div>
+    } @else {
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ 'squads.col.key' | translate }}</th>
+            <th>{{ 'squads.col.name' | translate }}</th>
+            <th>{{ 'squads.col.po' | translate }}</th>
+            <th>{{ 'squads.col.sm' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of squadsInTribe(); track s.key) {
+            <tr>
+              <td><a [routerLink]="['/squads', s.key]">{{ s.key }}</a></td>
+              <td>{{ s.name || '—' }}</td>
+              <td>{{ s.po || '—' }}</td>
+              <td>{{ s.sm || '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+}

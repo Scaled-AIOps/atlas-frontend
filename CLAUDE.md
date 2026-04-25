@@ -26,7 +26,7 @@ Angular 21 SPA that consumes [atlas-service](https://github.com/Scaled-AIOps/atl
 - **Lazy routes** — every feature is `loadComponent: () => import('./...').then(m => m.X)`. Initial bundle stays tiny; the graph chunk is the largest at ~530 kB.
 - **`ListState<T>` is a class, not a service** — instantiated once per page, no DI. Filter / sort / paginate happen client-side in `computed()` signals.
 - **Cross-resource navigation** — every list table cell that mentions another resource (e.g. an app's `squad`) is a `routerLink` to that resource's detail page. Squad ↔ app ↔ infra ↔ deploy history are all wired.
-- **Auth = Jira-only** — `AuthService.loginJira(email, jiraToken)` → `POST /api/auth/login/jira`. The bearer token is persisted in `localStorage.atlas.auth` and attached by `auth.interceptor.ts` on every `/api/*` call. 401 from any endpoint → `auth.logout()` + redirect to `/login`.
+- **Auth = email + shared token** — `AuthService.loginWithToken(email, token)` → `POST /api/auth/login/token`. The server enforces both gates (token matches `AUTH_TOKEN`, email is a squad member). The response `{ email, token, squads }` is persisted in `localStorage.atlas.auth` and the token is attached by `auth.interceptor.ts` on every `/api/*` call. 401 from any endpoint → `auth.logout()` + redirect to `/login`.
 - **All routes except `/login` are guarded** by `authGuard` (applied to the `Shell` parent route via `canActivate` + `canActivateChild`). The guard preserves `returnUrl` so users land where they tried to go.
 - **No global state library** — Angular signals + injected services are enough.
 

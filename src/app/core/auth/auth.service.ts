@@ -6,18 +6,16 @@ import { environment } from '../../../environments/environment';
 
 const STORAGE_KEY = 'atlas.auth';
 
-export interface JiraLoginResponse {
+export interface TokenLoginResponse {
   email: string;
   token: string;
   squads: string[];
-  jira?: { accountId?: string; displayName?: string };
 }
 
 interface AuthState {
   token: string;
   email: string;
   squads: string[];
-  displayName?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -30,9 +28,13 @@ export class AuthService {
 
   readonly isAuthenticated = computed(() => !!this.state());
   readonly token = computed(() => this.state()?.token ?? null);
-  readonly email = computed(() => this.state()?.email ?? '');
+  readonly userEmail = computed(() => this.state()?.email ?? '');
   readonly squads = computed(() => this.state()?.squads ?? []);
-  readonly displayName = computed(() => this.state()?.displayName ?? '');
+  readonly displayName = computed(() => {
+    const e = this.state()?.email || '';
+    if (!e) return '';
+    return e.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  });
 
   /** Restore session from localStorage on app startup. */
   init() {
@@ -47,9 +49,10 @@ export class AuthService {
     }
   }
 
-  loginJira(email: string, jiraToken: string): Observable<JiraLoginResponse> {
+  /** Verify { email, token } against /auth/login/token, persist on success. */
+  loginWithToken(email: string, token: string): Observable<TokenLoginResponse> {
     return this.http
-      .post<JiraLoginResponse>(`${this.base}/auth/login/jira`, { email, jiraToken })
+      .post<TokenLoginResponse>(`${this.base}/auth/login/token`, { email, token })
       .pipe(tap((r) => this.persist(r)));
   }
 
@@ -59,13 +62,8 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  private persist(r: JiraLoginResponse) {
-    const next: AuthState = {
-      token: r.token,
-      email: r.email,
-      squads: r.squads,
-      displayName: r.jira?.displayName,
-    };
+  private persist(r: TokenLoginResponse) {
+    const next: AuthState = { token: r.token, email: r.email, squads: r.squads };
     this.state.set(next);
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));

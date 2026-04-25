@@ -30,12 +30,12 @@
     <header class="topbar">
       <div class="topbar-title">{{ 'app.title' | translate }}</div>
       <div class="topbar-actions">
-        @if (userEmail()) {
-          <div class="user-chip" [title]="userEmail()">
-            <span class="user-avatar">{{ (userName() || userEmail()).charAt(0).toUpperCase() }}</span>
+        @if (isAuthenticated()) {
+          <div class="user-chip" [title]="userEmail() || ('shell.authenticated' | translate)">
+            <span class="user-avatar">{{ (displayName() || userEmail() || 'A').charAt(0).toUpperCase() }}</span>
             <span class="user-meta">
-              <span class="user-name">{{ userName() || userEmail() }}</span>
-              <span class="user-via">jira</span>
+              <span class="user-name">{{ displayName() || userEmail() || ('shell.authenticated' | translate) }}</span>
+              <span class="user-via">{{ userEmail() || 'token' }}</span>
             </span>
           </div>
           <button class="btn btn-ghost sign-out" (click)="signOut()" [title]="'shell.sign_out' | translate">

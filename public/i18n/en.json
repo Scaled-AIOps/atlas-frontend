@@ -27,26 +27,24 @@
     "clear_all": "Clear all"
   },
   "shell": {
-    "sign_out": "Sign out"
+    "sign_out": "Sign out",
+    "authenticated": "Authenticated"
   },
   "login": {
     "title": "Sign in to Atlas",
-    "subtitle": "Sign in with your Jira account email and a Jira API token.",
-    "email_label": "Jira email",
+    "subtitle": "Sign in with your team email and the shared Atlas access token.",
+    "email_label": "Email",
     "email_placeholder": "you@example.com",
-    "jira_token_label": "Jira API token",
-    "jira_token_placeholder": "ATATT3xFfGF0…",
-    "jira_help": "Create a Jira API token",
+    "token_label": "Access token",
+    "token_placeholder": "tok_…",
+    "token_hint": "Your email must appear in any squad's PO/SM/AO/DevOps/SRE/Devs/QA/Members fields. Ask an Atlas admin for the current shared token.",
     "sign_in": "Sign in",
     "signing_in": "Signing in…",
     "footer": "Atlas — Squad & Service Catalog",
     "error": {
-      "INVALID_INPUT": "Please fill in every field.",
-      "NOT_MEMBER": "This email isn't registered as a member of any squad.",
-      "JIRA_AUTH_FAILED": "Jira rejected the email + API token combination.",
-      "EMAIL_MISMATCH": "The email you entered doesn't match the Jira account behind this token.",
-      "JIRA_BASE_URL_NOT_CONFIGURED": "Jira sign-in isn't enabled on this server. Contact an admin.",
-      "JIRA_UNREACHABLE": "Couldn't reach Jira from the server. Try again later.",
+      "INVALID_INPUT": "Please fill in both fields.",
+      "INVALID_TOKEN": "That token does not match the server's AUTH_TOKEN.",
+      "NOT_MEMBER": "This email is not a member of any squad in the catalog.",
       "NO_TOKEN_CONFIGURED": "Server is misconfigured (no AUTH_TOKEN). Contact an admin.",
       "UNKNOWN": "Sign-in failed."
     }

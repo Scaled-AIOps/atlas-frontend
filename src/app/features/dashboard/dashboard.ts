@@ -56,8 +56,8 @@ export class Dashboard implements OnInit {
   apps = signal<AppInfo[]>([]);
   statuses = signal<AppStatusRecord[]>([]);
 
-  // Current user — sourced from the auth session.
-  readonly email = this.auth.email;
+  // Identity comes from the authenticated session (single source of truth).
+  readonly email = this.auth.userEmail;
 
   // Distinct emails extracted from every role field across every squad — feeds the <datalist>.
   emailOptions = computed<string[]>(() => {

@@ -16,13 +16,13 @@ export class Login implements OnInit {
   private route = inject(ActivatedRoute);
 
   email = signal('');
-  jiraToken = signal('');
+  token = signal('');
   loading = signal(false);
   errorCode = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
 
-  readonly canSubmit = computed(() =>
-    !this.loading() && !!this.email().trim() && !!this.jiraToken().trim(),
+  readonly canSubmit = computed(
+    () => !this.loading() && !!this.email().trim() && !!this.token().trim(),
   );
 
   ngOnInit() {
@@ -37,7 +37,7 @@ export class Login implements OnInit {
     this.errorMessage.set(null);
     this.loading.set(true);
 
-    this.auth.loginJira(this.email().trim(), this.jiraToken().trim()).subscribe({
+    this.auth.loginWithToken(this.email().trim(), this.token().trim()).subscribe({
       next: () => {
         this.loading.set(false);
         this.router.navigateByUrl(this.returnUrl());

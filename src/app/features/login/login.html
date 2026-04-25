@@ -26,23 +26,19 @@
       </label>
 
       <label class="field">
-        <span>{{ 'login.jira_token_label' | translate }}</span>
+        <span>{{ 'login.token_label' | translate }}</span>
         <input
           type="password"
           autocomplete="current-password"
-          [placeholder]="'login.jira_token_placeholder' | translate"
-          [ngModel]="jiraToken()"
-          (ngModelChange)="jiraToken.set($event)"
-          name="jiraToken"
+          [placeholder]="'login.token_placeholder' | translate"
+          [ngModel]="token()"
+          (ngModelChange)="token.set($event)"
+          name="token"
           required
         />
       </label>
 
-      <p class="hint">
-        <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank" rel="noopener">
-          {{ 'login.jira_help' | translate }} ↗
-        </a>
-      </p>
+      <p class="hint">{{ 'login.token_hint' | translate }}</p>
 
       @if (errorCode(); as code) {
         <div class="error">

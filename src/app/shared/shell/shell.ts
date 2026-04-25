@@ -15,8 +15,9 @@ export class Shell {
   private auth = inject(AuthService);
   readonly current = this.locale.current;
   readonly locales = SUPPORTED_LOCALES;
-  readonly userEmail = this.auth.email;
-  readonly userName = this.auth.displayName;
+  readonly isAuthenticated = this.auth.isAuthenticated;
+  readonly userEmail = this.auth.userEmail;
+  readonly displayName = this.auth.displayName;
 
   readonly nav = [
     { path: '/dashboard', labelKey: 'nav.dashboard', icon: '◈' },

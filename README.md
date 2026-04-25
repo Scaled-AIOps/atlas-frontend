@@ -8,7 +8,7 @@ Features:
 - **Graph view** — 5-tier left-to-right hierarchy (Tribe Domain → Sub-domain → Tribe → Squad → App), each tribe domain rendered as a "river of colour" with curved edges; click to focus a branch, double-click to drill into the resource
 - **List pages** for squads, infra, applications, deployments — each backed by a shared toolbar with **search**, **filter chips**, **sort**, **pagination**, and **CSV / JSON / YAML export**
 - **Detail pages** for every resource, with cross-links between squad ↔ app ↔ infra ↔ deploy history
-- **Jira-based login** — sign in with your Jira email + a Jira API token; the server validates against `${JIRA_BASE_URL}/rest/api/3/myself` and exchanges that for a bearer token (auto-attached to every API call)
+- **Token-based login with identity check** — sign in with your team email + the shared Atlas access token; both must validate (token matches `AUTH_TOKEN`, email is a real squad member). The bearer token is then auto-attached to every API call.
 - **Multi-language** UI — English and German, switchable from the topbar; persists in `localStorage`
 - **Role-aware quick actions** on the dashboard — see your squads, your apps grouped by status, your recent deploys, and a one-click jump to your squad
 - **Blue colour theme** (CSS variables) with a fixed sidebar shell
@@ -125,7 +125,7 @@ Click any node → side panel slides in with its metadata and a clickable child 
 
 ### Authentication
 
-Single login flow: **Jira API token**. The user enters their Jira email + API token; the SPA POSTs to `/api/auth/login/jira`; on 200, the bearer token is persisted in `localStorage.atlas.auth` and attached to every subsequent API call by `auth.interceptor.ts`. A 401 anywhere in the API surface clears the session and routes back to `/login`.
+Single login flow: **email + shared bearer token**. The user enters their team email + the access token; the SPA POSTs to `/api/auth/login/token`; the server checks both gates (token matches `AUTH_TOKEN`, email is a member of any squad's people-fields). On 200 the response `{ email, token, squads }` is persisted to `localStorage.atlas.auth` and the token is attached to every subsequent API call by `auth.interceptor.ts`. A 401 anywhere in the API surface clears the session and routes back to `/login`.
 
 Routing:
 - `/login` is the only unguarded route
@@ -134,15 +134,9 @@ Routing:
 
 Sign-out is in the topbar — clears the session, removes the localStorage key, and routes to `/login`.
 
-#### Why does the login screen ask for an API token?
+The topbar user-chip displays the signed-in user's name (derived from the email) so the personalised dashboard cards (My squads, My applications, My recent deploys) read directly from `auth.userEmail()` — no separate identity picker.
 
-The token is the proof of identity. Without it, the server can't verify that the user is who they claim to be, and "Jira login" would devolve into typing an email — which is exactly the email-only flow we removed. The atlas-service backend uses the token to call Jira's `myself` endpoint with HTTP Basic; Atlassian responds 200 only if the email + token pair is real, and the server additionally cross-checks that the email Jira returns matches the submitted one.
-
-Users create their tokens at <https://id.atlassian.com/manage-profile/security/api-tokens>. The login form links there directly under the token field.
-
-A redirect-based "Sign in with Jira" (Atlassian OAuth 2.0 / 3LO) would remove the paste step but requires registering an OAuth app in the Atlassian developer console + handling the callback. Out of scope for now.
-
-The atlas-service end requires `JIRA_BASE_URL=https://<workspace>.atlassian.net` to be set on the server; without it, login attempts fail with a friendly i18n error rather than silently breaking. See [atlas-service README — Authentication](https://github.com/Scaled-AIOps/atlas-service#authentication) for the server-side details.
+For the server-side details (membership rules, error codes), see [atlas-service README — Authentication](https://github.com/Scaled-AIOps/atlas-service#authentication).
 
 ### Internationalisation
 

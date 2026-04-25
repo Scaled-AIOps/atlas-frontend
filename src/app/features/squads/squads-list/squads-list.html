@@ -1,0 +1,53 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>Squads</h1>
+    <div class="page-sub">Teams registered in the catalog</div>
+  </div>
+</div>
+
+<app-list-controls [state]="state" exportName="squads" searchPlaceholder="Search squads, name, PO…" />
+
+<div class="card">
+  @if (loading()) {
+    <div class="loading-block"><span class="spinner"></span> Loading squads…</div>
+  } @else if (error()) {
+    <div class="loading-block">⚠ {{ error() }}</div>
+  } @else if (state.total() === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">◉</div>
+      <div class="empty-title">No squads match the current filters</div>
+    </div>
+  } @else {
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Name</th>
+          <th>Tribe domain</th>
+          <th>Sub-domain</th>
+          <th>Tribe</th>
+          <th>PO</th>
+          <th>SM</th>
+          <th>Members</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of state.page(); track s.key) {
+          <tr>
+            <td><a [routerLink]="['/squads', s.key]">{{ s.key }}</a></td>
+            <td>{{ s.name || '—' }}</td>
+            <td>
+              @if (s.tribeDomain) { <span class="badge badge-muted">{{ s.tribeDomain }}</span> } @else { — }
+            </td>
+            <td>{{ s.subDomain || '—' }}</td>
+            <td>{{ s.tribe || '—' }}</td>
+            <td>{{ s.po || '—' }}</td>
+            <td>{{ s.sm || '—' }}</td>
+            <td>{{ (s.members?.length || 0) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+  <app-pagination [state]="state" />
+</div>

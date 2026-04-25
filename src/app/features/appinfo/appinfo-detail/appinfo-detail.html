@@ -1,0 +1,91 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>App: {{ app()?.appId || '…' }}</h1>
+    <div class="page-sub">
+      @if (app()?.squad; as sq) {
+        Owned by <a [routerLink]="['/squads', sq]">{{ sq }}</a>
+      }
+    </div>
+  </div>
+  <a class="btn btn-ghost" [routerLink]="['/appinfo']">← Back to apps</a>
+</div>
+
+@if (loading()) {
+  <div class="card loading-block"><span class="spinner"></span> Loading…</div>
+} @else if (error()) {
+  <div class="card loading-block">⚠ {{ error() }}</div>
+} @else if (app(); as a) {
+  <div class="card">
+    <div class="detail-grid">
+      <div class="field"><div class="label">App ID</div><div class="value">{{ a.appId }}</div></div>
+      <div class="field">
+        <div class="label">Status</div>
+        <div class="value">
+          @if (a.status) { <span [class]="badgeClass(a.status)">{{ a.status }}</span> } @else { — }
+        </div>
+      </div>
+      <div class="field">
+        <div class="label">Squad</div>
+        <div class="value">
+          @if (a.squad) {
+            <a [routerLink]="['/squads', a.squad]">{{ a.squad }}</a>
+          } @else { — }
+        </div>
+      </div>
+      <div class="field">
+        <div class="label">Repository</div>
+        <div class="value">
+          @if (a.gitRepo) {
+            <a [href]="a.gitRepo" target="_blank" rel="noopener">{{ a.gitRepo }}</a>
+          } @else { — }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top: 1.5rem;">Environments</h3>
+  <div class="card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Env</th>
+          <th>Platform</th>
+          <th>URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (env of envs; track env) {
+          <tr>
+            <td><span class="badge badge-muted">{{ env }}</span></td>
+            <td>
+              @if (envPlatform(a, env); as p) {
+                <a [routerLink]="['/infra', p]">{{ p }}</a>
+              } @else { <span style="color: var(--text-subtle);">—</span> }
+            </td>
+            <td>
+              @if (envUrl(a, env); as u) {
+                <a [href]="u" target="_blank" rel="noopener">{{ u }}</a>
+              } @else { <span style="color: var(--text-subtle);">—</span> }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (a.probeHealth || a.probeInfo || a.probeLiveness || a.probeReadiness) {
+    <h3 style="margin-top: 1.5rem;">Health probes</h3>
+    <div class="card">
+      <div class="detail-grid">
+        <div class="field"><div class="label">Health</div><div class="value">{{ a.probeHealth || '—' }}</div></div>
+        <div class="field"><div class="label">Info</div><div class="value">{{ a.probeInfo || '—' }}</div></div>
+        <div class="field"><div class="label">Liveness</div><div class="value">{{ a.probeLiveness || '—' }}</div></div>
+        <div class="field"><div class="label">Readiness</div><div class="value">{{ a.probeReadiness || '—' }}</div></div>
+      </div>
+    </div>
+  }
+
+  <p style="margin-top: 1rem;">
+    <a class="btn btn-primary" [routerLink]="['/appstatus', a.appId]">View deploy history →</a>
+  </p>
+}

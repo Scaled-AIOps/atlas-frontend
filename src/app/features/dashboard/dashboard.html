@@ -1,0 +1,35 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>Dashboard</h1>
+    <div class="page-sub">Overview of squads, infrastructure, and applications</div>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="card loading-block"><span class="spinner"></span> Loading…</div>
+} @else if (error()) {
+  <div class="card loading-block">⚠ {{ error() }}</div>
+} @else {
+  <div class="metric-grid">
+    <a class="metric" [routerLink]="['/squads']">
+      <div class="metric-label">Squads</div>
+      <div class="metric-value">{{ squadCount() }}</div>
+      <div class="metric-sub">teams in catalog</div>
+    </a>
+    <a class="metric" [routerLink]="['/infra']">
+      <div class="metric-label">Infrastructure</div>
+      <div class="metric-value">{{ infraCount() }}</div>
+      <div class="metric-sub">deployment platforms</div>
+    </a>
+    <a class="metric" [routerLink]="['/appinfo']">
+      <div class="metric-label">Applications</div>
+      <div class="metric-value">{{ appinfoCount() }}</div>
+      <div class="metric-sub">registered apps</div>
+    </a>
+    <a class="metric" [routerLink]="['/appstatus']">
+      <div class="metric-label">Deploy records</div>
+      <div class="metric-value">{{ appstatusCount() }}</div>
+      <div class="metric-sub">apps with deploy history</div>
+    </a>
+  </div>
+}

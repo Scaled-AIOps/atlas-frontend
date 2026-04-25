@@ -1,0 +1,121 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>Graph view</h1>
+    <div class="page-sub">
+      Tribe Domain → Sub-domain → Tribe → Squad → Application. Click any node to focus its branch; double-click a squad or app to open its detail page.
+    </div>
+  </div>
+</div>
+
+<div class="toolbar card">
+  <div class="toolbar-group">
+    <span class="toolbar-label">Layout</span>
+    <button class="btn-toggle" [class.on]="layout() === 'hierarchical'" (click)="setLayout('hierarchical')">
+      <span class="ic">⇶</span> Hierarchy
+    </button>
+    <button class="btn-toggle" [class.on]="layout() === 'force'" (click)="setLayout('force')">
+      <span class="ic">✦</span> Force
+    </button>
+  </div>
+
+  <div class="toolbar-group">
+    <label class="check">
+      <input type="checkbox" [checked]="hideInactive()" (change)="toggleInactive()" />
+      Active apps only
+    </label>
+  </div>
+
+  <div class="toolbar-spacer"></div>
+
+  <div class="toolbar-group">
+    <input
+      class="search"
+      type="search"
+      placeholder="Search nodes…"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+    />
+    <button class="btn-icon" (click)="fitToView()" title="Fit to view">⇱</button>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="card loading-block"><span class="spinner"></span> Loading graph…</div>
+} @else if (error()) {
+  <div class="card loading-block">⚠ {{ error() }}</div>
+} @else {
+  <div class="legend-and-stats">
+    <div class="legend">
+      <span class="legend-section">Tiers:</span>
+      <span class="tier-pill t-domain">Tribe domain</span>
+      <span class="tier-arrow">›</span>
+      <span class="tier-pill t-sub">Sub-domain</span>
+      <span class="tier-arrow">›</span>
+      <span class="tier-pill t-tribe">Tribe</span>
+      <span class="tier-arrow">›</span>
+      <span class="tier-pill t-squad">Squad</span>
+      <span class="tier-arrow">›</span>
+      <span class="tier-pill t-app">App</span>
+    </div>
+    <div class="stats">
+      {{ domainCount() }} domains · {{ subDomainCount() }} sub-domains ·
+      {{ tribeCount() }} tribes · {{ squadCount() }} squads · {{ appCount() }} apps ·
+      <strong>{{ edgeCount() }} edges</strong>
+    </div>
+  </div>
+
+  <div class="domain-strip">
+    @for (d of domains(); track d.name) {
+      <span class="domain-chip" [style.background]="d.color">{{ d.name }}</span>
+    }
+    <span class="domain-note">App border = status: <span class="b-active">active</span> · <span class="b-failed">failed</span> · <span class="b-decom">decom</span> · <span class="b-inactive">inactive</span></span>
+  </div>
+
+  <div class="graph-shell card" [class.has-selection]="!!selected()">
+    <div #graphHost class="graph-host"></div>
+
+    @if (selected(); as sel) {
+      <aside class="side-panel">
+        <header class="side-head">
+          <span class="kind-badge" [class]="'kind-' + sel.kind">{{ sel.kind }}</span>
+          <h3>{{ sel.label }}</h3>
+          <button class="btn-icon close" (click)="clearSelection()" title="Close">×</button>
+        </header>
+
+        <dl class="kv">
+          @for (kv of sel.meta | keyvalue; track kv.key) {
+            <dt>{{ kv.key }}</dt><dd>{{ kv.value }}</dd>
+          }
+        </dl>
+
+        <div class="side-section">
+          <div class="side-section-title">Children ({{ sel.neighbors.length }})</div>
+          @if (sel.neighbors.length === 0) {
+            <div class="side-empty">Leaf node</div>
+          } @else {
+            <ul class="neighbor-list">
+              @for (n of sel.neighbors; track n.id) {
+                <li (click)="jumpTo(n.id)">
+                  <span class="kind-dot" [class]="'kind-' + n.kind"></span>
+                  <span class="neighbor-label">{{ n.label }}</span>
+                  <span class="neighbor-via">{{ n.kind }}</span>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+
+        @if (sel.kind === 'squad' || sel.kind === 'app') {
+          <button class="btn btn-primary side-cta" (click)="goToSelected()">
+            Open detail page →
+          </button>
+        }
+      </aside>
+    }
+  </div>
+
+  <p class="hint">
+    Tip: each tribe domain owns a colour family. Children inherit lighter tints of their domain's hue, so a single
+    “river of colour” flows from the top-level domain on the left all the way to its apps on the right.
+  </p>
+}

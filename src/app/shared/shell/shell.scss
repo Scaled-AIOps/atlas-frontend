@@ -1,0 +1,140 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 100vh;
+  background: var(--surface-bg);
+}
+
+.sidebar {
+  background: linear-gradient(180deg, var(--blue-900) 0%, var(--blue-800) 100%);
+  color: var(--blue-50);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--blue-700);
+}
+
+.brand {
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  .brand-mark {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--blue-400), var(--blue-200));
+    color: var(--blue-900);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 1.15rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  .brand-name {
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+  }
+
+  .brand-tag {
+    font-size: 0.72rem;
+    color: var(--blue-200);
+    opacity: 0.8;
+  }
+}
+
+.nav {
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.85rem;
+    border-radius: 8px;
+    color: var(--blue-100);
+    text-decoration: none;
+    font-size: 0.92rem;
+    transition: background 120ms ease, color 120ms ease;
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+    }
+
+    &.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      box-shadow: inset 3px 0 0 var(--blue-300);
+
+      .nav-icon {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.sidebar-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+  color: var(--blue-200);
+  opacity: 0.7;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.topbar {
+  height: 56px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .topbar-title {
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  .env-badge {
+    background: var(--blue-50);
+    color: var(--blue-700);
+    border: 1px solid var(--blue-200);
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+  padding: 1.75rem 2rem;
+}

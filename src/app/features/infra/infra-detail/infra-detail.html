@@ -1,0 +1,41 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>Infrastructure: {{ infra()?.platformId || '…' }}</h1>
+    <div class="page-sub">{{ infra()?.name }}</div>
+  </div>
+  <a class="btn btn-ghost" [routerLink]="['/infra']">← Back to infra</a>
+</div>
+
+@if (loading()) {
+  <div class="card loading-block"><span class="spinner"></span> Loading…</div>
+} @else if (error()) {
+  <div class="card loading-block">⚠ {{ error() }}</div>
+} @else if (infra(); as i) {
+  <div class="card">
+    <div class="detail-grid">
+      <div class="field"><div class="label">Platform ID</div><div class="value">{{ i.platformId }}</div></div>
+      <div class="field"><div class="label">Name</div><div class="value">{{ i.name || '—' }}</div></div>
+      <div class="field"><div class="label">Platform</div><div class="value">{{ i.platform || '—' }}</div></div>
+      <div class="field"><div class="label">Platform type</div><div class="value">{{ i.platformType || '—' }}</div></div>
+      <div class="field"><div class="label">Environment</div><div class="value">{{ i.environment || '—' }}</div></div>
+      <div class="field"><div class="label">Cluster ID</div><div class="value">{{ i.clusterId || '—' }}</div></div>
+      <div class="field"><div class="label">Token ID</div><div class="value">{{ i.tokenId || '—' }}</div></div>
+      <div class="field"><div class="label">Host</div><div class="value">{{ i.host || '—' }}</div></div>
+      <div class="field"><div class="label">Route hostname</div><div class="value">{{ i.routeHostName || '—' }}</div></div>
+    </div>
+  </div>
+
+  @if (tagEntries(i.tags).length > 0) {
+    <h3 style="margin-top: 1.5rem;">Tags</h3>
+    <div class="card">
+      <div class="detail-grid">
+        @for (kv of tagEntries(i.tags); track kv[0]) {
+          <div class="field">
+            <div class="label">{{ kv[0] }}</div>
+            <div class="value">{{ kv[1] }}</div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+}

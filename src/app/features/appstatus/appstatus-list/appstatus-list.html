@@ -1,0 +1,50 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>Deployments</h1>
+    <div class="page-sub">Latest deploy state per app, per environment</div>
+  </div>
+</div>
+
+<app-list-controls [state]="state" exportName="appstatus" searchPlaceholder="Search apps…" />
+
+<div class="card">
+  @if (loading()) {
+    <div class="loading-block"><span class="spinner"></span> Loading deploy records…</div>
+  } @else if (error()) {
+    <div class="loading-block">⚠ {{ error() }}</div>
+  } @else if (state.total() === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">◊</div>
+      <div class="empty-title">No deployment records match the current filters</div>
+    </div>
+  } @else {
+    <table class="table">
+      <thead>
+        <tr>
+          <th>App ID</th>
+          @for (env of envs; track env) {
+            <th>{{ env }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of state.page(); track r.appId) {
+          <tr>
+            <td><a [routerLink]="['/appstatus', r.appId]">{{ r.appId }}</a></td>
+            @for (env of envs; track env) {
+              <td>
+                @if (latest(r, env); as d) {
+                  <span [class]="stateClass(d.state)">{{ d.state }}</span>
+                  @if (d.version) { <span style="color: var(--text-muted); font-size: 0.78rem; margin-left: 0.4rem;">{{ d.version }}</span> }
+                } @else {
+                  <span style="color: var(--text-subtle);">—</span>
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+  <app-pagination [state]="state" />
+</div>

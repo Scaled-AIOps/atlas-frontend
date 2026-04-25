@@ -1,0 +1,104 @@
+<div class="lc-toolbar">
+  <div class="lc-search">
+    <span class="lc-search-icon">⌕</span>
+    <input
+      type="search"
+      [placeholder]="searchPlaceholder"
+      [ngModel]="state.search()"
+      (ngModelChange)="state.setSearch($event)"
+    />
+  </div>
+
+  @for (ff of state.filterFields; track ff.key) {
+    <div class="lc-dropdown" (click)="$event.stopPropagation()">
+      <button
+        class="lc-btn"
+        [class.has-active]="(state.filters().get(ff.key)?.size || 0) > 0"
+        (click)="toggleFilterDropdown(ff.key)"
+      >
+        <span class="lc-btn-label">{{ ff.label }}</span>
+        @if ((state.filters().get(ff.key)?.size || 0) > 0) {
+          <span class="lc-count">{{ state.filters().get(ff.key)!.size }}</span>
+        }
+        <span class="lc-caret">▾</span>
+      </button>
+      @if (openFilter() === ff.key) {
+        <div class="lc-menu">
+          @for (opt of state.filterOptions(ff.key); track opt) {
+            <label class="lc-option">
+              <input
+                type="checkbox"
+                [checked]="state.isFilterActive(ff.key, opt)"
+                (change)="state.toggleFilter(ff.key, opt)"
+              />
+              <span>{{ opt }}</span>
+            </label>
+          } @empty {
+            <div class="lc-empty">No values</div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (state.sortFields.length > 0) {
+    <div class="lc-sort">
+      <span class="lc-btn-label">Sort</span>
+      <select [ngModel]="sortValue()" (ngModelChange)="onSortChange($event)">
+        <option value="">Default</option>
+        @for (sf of state.sortFields; track sf.key) {
+          <option [value]="sf.key">{{ sf.label }} ↑</option>
+          <option [value]="'-' + sf.key">{{ sf.label }} ↓</option>
+        }
+      </select>
+    </div>
+  }
+
+  <div class="lc-spacer"></div>
+
+  <div class="lc-dropdown" (click)="$event.stopPropagation()">
+    <button class="lc-btn" (click)="toggleExport()" [disabled]="state.total() === 0" title="Export filtered rows">
+      <span class="lc-btn-label">Export</span>
+      <span class="lc-count lc-count-muted">{{ state.total() }}</span>
+      <span class="lc-caret">▾</span>
+    </button>
+    @if (exportOpen()) {
+      <div class="lc-menu">
+        <button class="lc-export-row" (click)="doExport('csv')">
+          <span class="lc-export-fmt">CSV</span>
+          <span class="lc-export-hint">.csv · spreadsheet</span>
+        </button>
+        <button class="lc-export-row" (click)="doExport('json')">
+          <span class="lc-export-fmt">JSON</span>
+          <span class="lc-export-hint">.json · pretty-printed</span>
+        </button>
+        <button class="lc-export-row" (click)="doExport('yaml')">
+          <span class="lc-export-fmt">YAML</span>
+          <span class="lc-export-hint">.yaml · seed-compatible</span>
+        </button>
+      </div>
+    }
+  </div>
+
+  <div class="lc-pagesize">
+    <span class="lc-btn-label">Per page</span>
+    <select [ngModel]="state.limit()" (ngModelChange)="state.setLimit(+$event)">
+      @for (n of state.pageSizes; track n) {
+        <option [value]="n">{{ n }}</option>
+      }
+    </select>
+  </div>
+</div>
+
+@if (activeChips().length > 0) {
+  <div class="lc-chips">
+    @for (chip of activeChips(); track chip.key + ':' + chip.value) {
+      <span class="lc-chip">
+        <span class="chip-key">{{ chip.label }}:</span>
+        <span class="chip-val">{{ chip.value }}</span>
+        <button class="chip-x" (click)="state.removeFilter(chip.key, chip.value)" title="Remove">×</button>
+      </span>
+    }
+    <button class="lc-clear" (click)="state.clearFilters()">Clear all</button>
+  </div>
+}

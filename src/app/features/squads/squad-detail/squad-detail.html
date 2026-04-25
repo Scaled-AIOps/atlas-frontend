@@ -1,0 +1,80 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>Squad: {{ squad()?.key || '…' }}</h1>
+    <div class="page-sub">{{ squad()?.name }}</div>
+  </div>
+  <a class="btn btn-ghost" [routerLink]="['/squads']">← Back to squads</a>
+</div>
+
+@if (loading()) {
+  <div class="card loading-block"><span class="spinner"></span> Loading…</div>
+} @else if (error()) {
+  <div class="card loading-block">⚠ {{ error() }}</div>
+} @else if (squad(); as s) {
+  <div class="card">
+    <div class="detail-grid">
+      <div class="field"><div class="label">Key</div><div class="value">{{ s.key }}</div></div>
+      <div class="field"><div class="label">Name</div><div class="value">{{ s.name || '—' }}</div></div>
+      <div class="field"><div class="label">Description</div><div class="value">{{ s.description || '—' }}</div></div>
+      <div class="field"><div class="label">Tribe</div><div class="value">{{ s.tribe || '—' }}</div></div>
+      <div class="field"><div class="label">Tribe domain</div><div class="value">{{ s.tribeDomain || '—' }}</div></div>
+      <div class="field"><div class="label">Sub-domain</div><div class="value">{{ s.subDomain || '—' }}</div></div>
+      <div class="field"><div class="label">PO</div><div class="value">{{ s.po || '—' }}</div></div>
+      <div class="field"><div class="label">SM</div><div class="value">{{ s.sm || '—' }}</div></div>
+      <div class="field"><div class="label">AO</div><div class="value">{{ s.ao?.join(', ') || '—' }}</div></div>
+      <div class="field"><div class="label">Mailing list</div><div class="value">{{ s.mailingList?.join(', ') || '—' }}</div></div>
+      <div class="field">
+        <div class="label">Jira</div>
+        <div class="value">
+          @if (s.jira) { <a [href]="s.jira" target="_blank" rel="noopener">{{ s.jira }}</a> } @else { — }
+        </div>
+      </div>
+      <div class="field">
+        <div class="label">GitHub</div>
+        <div class="value">
+          @if (s.github) { <a [href]="s.github" target="_blank" rel="noopener">{{ s.github }}</a> } @else { — }
+        </div>
+      </div>
+      <div class="field">
+        <div class="label">Confluence</div>
+        <div class="value">
+          @if (s.confluence) { <a [href]="s.confluence" target="_blank" rel="noopener">{{ s.confluence }}</a> } @else { — }
+        </div>
+      </div>
+      <div class="field">
+        <div class="label">Products / services</div>
+        <div class="value">{{ s.productsService?.join(', ') || '—' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top: 1.5rem;">Members</h3>
+  <div class="card">
+    <div class="detail-grid">
+      <div class="field">
+        <div class="label">DevOps ({{ s.devops?.length || 0 }})</div>
+        <div class="value">{{ s.devops?.join(', ') || '—' }}</div>
+      </div>
+      <div class="field">
+        <div class="label">SRE ({{ s.sre?.length || 0 }})</div>
+        <div class="value">{{ s.sre?.join(', ') || '—' }}</div>
+      </div>
+      <div class="field">
+        <div class="label">Backend ({{ s.backendDevs?.length || 0 }})</div>
+        <div class="value">{{ s.backendDevs?.join(', ') || '—' }}</div>
+      </div>
+      <div class="field">
+        <div class="label">Frontend ({{ s.frontendDevs?.length || 0 }})</div>
+        <div class="value">{{ s.frontendDevs?.join(', ') || '—' }}</div>
+      </div>
+      <div class="field">
+        <div class="label">QA ({{ s.qa?.length || 0 }})</div>
+        <div class="value">{{ s.qa?.join(', ') || '—' }}</div>
+      </div>
+      <div class="field">
+        <div class="label">Other members ({{ s.members?.length || 0 }})</div>
+        <div class="value">{{ s.members?.join(', ') || '—' }}</div>
+      </div>
+    </div>
+  </div>
+}

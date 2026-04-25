@@ -1,0 +1,53 @@
+<div class="page-header">
+  <div class="page-title">
+    <h1>Deploy history: {{ record()?.appId || '…' }}</h1>
+    <div class="page-sub">Append-only log per environment</div>
+  </div>
+  <a class="btn btn-ghost" [routerLink]="['/appstatus']">← Back to deployments</a>
+</div>
+
+@if (loading()) {
+  <div class="card loading-block"><span class="spinner"></span> Loading…</div>
+} @else if (error()) {
+  <div class="card loading-block">⚠ {{ error() }}</div>
+} @else if (record(); as r) {
+  @for (env of envs; track env) {
+    <h3 style="margin-top: 1.5rem;">
+      Environment: <span class="badge badge-muted">{{ env }}</span>
+    </h3>
+    <div class="card">
+      @if (entriesDesc(r, env).length === 0) {
+        <div class="empty-state" style="padding: 1.5rem;">
+          <div>No deploys recorded for {{ env }}</div>
+        </div>
+      } @else {
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Deployed at</th>
+              <th>State</th>
+              <th>Version</th>
+              <th>Branch</th>
+              <th>Commit</th>
+              <th>Deployed by</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (d of entriesDesc(r, env); track d.deployedAt) {
+              <tr>
+                <td>{{ d.deployedAt | date: 'medium' }}</td>
+                <td><span [class]="stateClass(d.state)">{{ d.state }}</span></td>
+                <td>{{ d.version || '—' }}</td>
+                <td>{{ d.branch || '—' }}</td>
+                <td><code style="font-size: 0.78rem;">{{ d.commitId || '—' }}</code></td>
+                <td>{{ d.deployedBy || '—' }}</td>
+                <td>{{ d.notes || '—' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+}

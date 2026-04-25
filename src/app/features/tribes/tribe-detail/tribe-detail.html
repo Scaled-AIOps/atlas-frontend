@@ -22,7 +22,14 @@
         <div class="label">{{ 'tribes_detail.field.sub_domain' | translate }}</div>
         <div class="value"><a [routerLink]="['/subdomains', t.subDomain]">{{ t.subDomain }}</a></div>
       </div>
-      <div class="field"><div class="label">{{ 'tribes_detail.field.lead' | translate }}</div><div class="value">{{ t.lead || '—' }}</div></div>
+      <div class="field">
+        <div class="label">{{ 'tribes_detail.field.lead' | translate }}</div>
+        <div class="value">
+          @if (t.lead) {
+            <span class="badge">{{ t.lead }}</span>
+          } @else { — }
+        </div>
+      </div>
       <div class="field">
         <div class="label">{{ 'tribes_detail.field.release_manager' | translate }}</div>
         <div class="value">

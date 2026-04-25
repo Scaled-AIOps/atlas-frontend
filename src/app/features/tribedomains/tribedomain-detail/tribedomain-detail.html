@@ -13,7 +13,14 @@
   <div class="card">
     <div class="detail-grid">
       <div class="field"><div class="label">{{ 'tribedomains_detail.field.name' | translate }}</div><div class="value">{{ d.name }}</div></div>
-      <div class="field"><div class="label">{{ 'tribedomains_detail.field.lead' | translate }}</div><div class="value">{{ d.lead || '—' }}</div></div>
+      <div class="field">
+        <div class="label">{{ 'tribedomains_detail.field.lead' | translate }}</div>
+        <div class="value">
+          @if (d.lead) {
+            <span class="badge">{{ d.lead }}</span>
+          } @else { — }
+        </div>
+      </div>
       <div class="field"><div class="label">{{ 'tribedomains_detail.field.description' | translate }}</div><div class="value">{{ d.description || '—' }}</div></div>
     </div>
   </div>
@@ -34,7 +41,11 @@
           @for (s of children(); track s.name) {
             <tr>
               <td><a [routerLink]="['/subdomains', s.name]">{{ s.name }}</a></td>
-              <td>{{ s.lead || '—' }}</td>
+              <td>
+                @if (s.lead) {
+                  <span class="badge">{{ s.lead }}</span>
+                } @else { — }
+              </td>
             </tr>
           }
         </tbody>

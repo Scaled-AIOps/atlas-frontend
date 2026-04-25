@@ -34,7 +34,11 @@
             <td><a [routerLink]="['/tribes', t.name]">{{ t.name }}</a></td>
             <td><a [routerLink]="['/tribedomains', t.tribeDomain]">{{ t.tribeDomain }}</a></td>
             <td><a [routerLink]="['/subdomains', t.subDomain]">{{ t.subDomain }}</a></td>
-            <td>{{ t.lead || '—' }}</td>
+            <td>
+              @if (t.lead) {
+                <span class="badge">{{ t.lead }}</span>
+              } @else { — }
+            </td>
             <td>
               @if (t.releaseManager) {
                 <span class="badge badge-success">{{ t.releaseManager }}</span>

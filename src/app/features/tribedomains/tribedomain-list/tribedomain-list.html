@@ -30,7 +30,11 @@
         @for (d of state.page(); track d.name) {
           <tr>
             <td><a [routerLink]="['/tribedomains', d.name]">{{ d.name }}</a></td>
-            <td>{{ d.lead || '—' }}</td>
+            <td>
+              @if (d.lead) {
+                <span class="badge">{{ d.lead }}</span>
+              } @else { — }
+            </td>
             <td>{{ d.description || '—' }}</td>
           </tr>
         }

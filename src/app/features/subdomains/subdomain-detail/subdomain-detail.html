@@ -17,7 +17,14 @@
         <div class="label">{{ 'subdomains_detail.field.tribe_domain' | translate }}</div>
         <div class="value"><a [routerLink]="['/tribedomains', s.tribeDomain]">{{ s.tribeDomain }}</a></div>
       </div>
-      <div class="field"><div class="label">{{ 'subdomains_detail.field.lead' | translate }}</div><div class="value">{{ s.lead || '—' }}</div></div>
+      <div class="field">
+        <div class="label">{{ 'subdomains_detail.field.lead' | translate }}</div>
+        <div class="value">
+          @if (s.lead) {
+            <span class="badge">{{ s.lead }}</span>
+          } @else { — }
+        </div>
+      </div>
       <div class="field"><div class="label">{{ 'subdomains_detail.field.description' | translate }}</div><div class="value">{{ s.description || '—' }}</div></div>
     </div>
   </div>
@@ -39,7 +46,11 @@
           @for (t of children(); track t.name) {
             <tr>
               <td><a [routerLink]="['/tribes', t.name]">{{ t.name }}</a></td>
-              <td>{{ t.lead || '—' }}</td>
+              <td>
+                @if (t.lead) {
+                  <span class="badge">{{ t.lead }}</span>
+                } @else { — }
+              </td>
               <td>
                 @if (t.releaseManager) {
                   <span class="badge badge-success">{{ t.releaseManager }}</span>

@@ -31,7 +31,11 @@
           <tr>
             <td><a [routerLink]="['/subdomains', s.name]">{{ s.name }}</a></td>
             <td><a [routerLink]="['/tribedomains', s.tribeDomain]">{{ s.tribeDomain }}</a></td>
-            <td>{{ s.lead || '—' }}</td>
+            <td>
+              @if (s.lead) {
+                <span class="badge">{{ s.lead }}</span>
+              } @else { — }
+            </td>
           </tr>
         }
       </tbody>

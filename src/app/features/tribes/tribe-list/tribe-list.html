@@ -26,6 +26,7 @@
           <th>{{ 'tribes.col.sub_domain' | translate }}</th>
           <th>{{ 'tribes.col.lead' | translate }}</th>
           <th>{{ 'tribes.col.release_manager' | translate }}</th>
+          <th>{{ 'tribes.col.agile_coach' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -42,6 +43,11 @@
             <td>
               @if (t.releaseManager) {
                 <span class="badge badge-success">{{ t.releaseManager }}</span>
+              } @else { — }
+            </td>
+            <td>
+              @if (t.agileCoach) {
+                <span class="badge badge-warn">{{ t.agileCoach }}</span>
               } @else { — }
             </td>
           </tr>

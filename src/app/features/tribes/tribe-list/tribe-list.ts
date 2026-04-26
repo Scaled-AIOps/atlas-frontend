@@ -26,18 +26,21 @@ export class TribeList implements OnInit {
       (t) => t.name,
       (t) => t.lead,
       (t) => t.releaseManager,
+      (t) => t.agileCoach,
       (t) => t.description,
     ];
     this.state.filterFields = [
       { key: 'tribeDomain',    label: 'tribes.col.tribe_domain',    pick: (t) => t.tribeDomain },
       { key: 'subDomain',      label: 'tribes.col.sub_domain',      pick: (t) => t.subDomain },
       { key: 'releaseManager', label: 'tribes.col.release_manager', pick: (t) => t.releaseManager },
+      { key: 'agileCoach',     label: 'tribes.col.agile_coach',     pick: (t) => t.agileCoach },
     ];
     this.state.sortFields = [
       { key: 'name',           label: 'tribes.col.name',            pick: (t) => t.name },
       { key: 'tribeDomain',    label: 'tribes.col.tribe_domain',    pick: (t) => t.tribeDomain },
       { key: 'subDomain',      label: 'tribes.col.sub_domain',      pick: (t) => t.subDomain },
       { key: 'releaseManager', label: 'tribes.col.release_manager', pick: (t) => t.releaseManager },
+      { key: 'agileCoach',     label: 'tribes.col.agile_coach',     pick: (t) => t.agileCoach },
     ];
     this.state.setSort('name', 'asc');
   }

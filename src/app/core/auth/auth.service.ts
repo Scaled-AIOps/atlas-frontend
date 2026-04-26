@@ -76,7 +76,11 @@ export class AuthService {
     if (!me) return false;
     const eq = (v?: string) => !!v && v.toLowerCase() === me;
     if (eq(squad.po) || eq(squad.sm)) return true;
-    if (parents?.tribe && (eq(parents.tribe.lead) || eq(parents.tribe.releaseManager))) return true;
+    if (parents?.tribe && (
+      eq(parents.tribe.lead) ||
+      eq(parents.tribe.releaseManager) ||
+      eq(parents.tribe.agileCoach)
+    )) return true;
     if (parents?.subDomain && eq(parents.subDomain.lead)) return true;
     if (parents?.tribeDomain && eq(parents.tribeDomain.lead)) return true;
     return false;

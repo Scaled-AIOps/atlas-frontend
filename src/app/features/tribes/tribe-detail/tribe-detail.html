@@ -39,6 +39,14 @@
         </div>
       </div>
       <div class="field">
+        <div class="label">{{ 'tribes_detail.field.agile_coach' | translate }}</div>
+        <div class="value">
+          @if (t.agileCoach) {
+            <span class="badge badge-warn">{{ t.agileCoach }}</span>
+          } @else { — }
+        </div>
+      </div>
+      <div class="field">
         <div class="label">{{ 'tribes_detail.field.confluence' | translate }}</div>
         <div class="value">
           @if (t.confluence) {

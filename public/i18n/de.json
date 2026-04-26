@@ -192,7 +192,8 @@
       "tribe_domain": "Tribe-Domain",
       "sub_domain": "Sub-Domain",
       "lead": "Lead",
-      "release_manager": "Release Manager"
+      "release_manager": "Release Manager",
+      "agile_coach": "Agile Coach"
     }
   },
   "tribes_detail": {
@@ -206,6 +207,7 @@
       "sub_domain": "Sub-Domain",
       "lead": "Lead",
       "release_manager": "Release Manager",
+      "agile_coach": "Agile Coach",
       "confluence": "Confluence",
       "description": "Beschreibung"
     }

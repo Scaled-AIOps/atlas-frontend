@@ -28,6 +28,7 @@ export interface Tribe {
   tribeDomain: string;
   lead?: string;
   releaseManager?: string;
+  agileCoach?: string;
   description?: string;
   confluence?: string;
   tags?: Record<string, unknown>;

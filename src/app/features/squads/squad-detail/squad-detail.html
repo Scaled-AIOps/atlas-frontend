@@ -25,6 +25,37 @@
           <input id="ed-desc" class="value-input" [ngModel]="edit().description" (ngModelChange)="patch('description', $event)" name="description" />
         </div>
         <div class="field">
+          <label class="label" for="ed-tribedomain">{{ 'squad_detail.field.tribe_domain' | translate }}</label>
+          <select id="ed-tribedomain" class="value-input" [ngModel]="edit().tribeDomain" (ngModelChange)="patch('tribeDomain', $event)" name="tribeDomain">
+            <option value="">—</option>
+            @for (d of allTribeDomains(); track d.name) {
+              <option [value]="d.name">{{ d.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label class="label" for="ed-subdomain">{{ 'squad_detail.field.sub_domain' | translate }}</label>
+          <select id="ed-subdomain" class="value-input" [ngModel]="edit().subDomain" (ngModelChange)="patch('subDomain', $event)" name="subDomain">
+            <option value="">—</option>
+            @for (s of allSubDomains(); track s.name) {
+              <option [value]="s.name">{{ s.name }} <span style="color: var(--text-muted);">({{ s.tribeDomain }})</span></option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label class="label" for="ed-tribe">{{ 'squad_detail.field.tribe' | translate }}</label>
+          <select id="ed-tribe" class="value-input" [ngModel]="edit().tribe" (ngModelChange)="patch('tribe', $event)" name="tribe">
+            <option value="">—</option>
+            @for (t of allTribes(); track t.name) {
+              <option [value]="t.name">{{ t.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label class="label" for="ed-products">{{ 'squad_detail.field.products_service' | translate }} <span style="color: var(--text-subtle);">(comma-separated)</span></label>
+          <input id="ed-products" class="value-input" [ngModel]="edit().productsService" (ngModelChange)="patch('productsService', $event)" name="productsService" />
+        </div>
+        <div class="field">
           <label class="label" for="ed-po">{{ 'squad_detail.field.po' | translate }}</label>
           <input id="ed-po" class="value-input" [ngModel]="edit().po" (ngModelChange)="patch('po', $event)" name="po" />
         </div>

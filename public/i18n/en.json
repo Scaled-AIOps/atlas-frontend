@@ -27,7 +27,11 @@
     "all": "All",
     "none": "None",
     "clear": "Clear",
-    "clear_all": "Clear all"
+    "clear_all": "Clear all",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel"
   },
   "shell": {
     "sign_out": "Sign out",
@@ -227,6 +231,7 @@
     "title": "Squad: {{key}}",
     "back": "← Back to squads",
     "members": "Members",
+    "edit_title": "Edit squad",
     "field": {
       "key": "Key",
       "name": "Name",
@@ -303,6 +308,7 @@
     "view_history": "View deploy history →",
     "envs": "Environments",
     "probes": "Health probes",
+    "edit_title": "Edit application",
     "field": {
       "app_id": "App ID",
       "status": "Status",

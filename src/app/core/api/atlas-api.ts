@@ -50,6 +50,9 @@ export class AtlasApi {
   getSquad(key: string): Observable<Squad> {
     return this.http.get<Squad>(`${this.base}/squads/${key}`);
   }
+  patchSquad(key: string, patch: Partial<Squad>): Observable<Squad> {
+    return this.http.patch<Squad>(`${this.base}/squads/${key}`, patch);
+  }
 
   // ── Infra ─────────────────────────────────────────────────────────────
   listInfra(): Observable<Infra[]> {
@@ -65,6 +68,9 @@ export class AtlasApi {
   }
   getAppInfo(appId: string): Observable<AppInfo> {
     return this.http.get<AppInfo>(`${this.base}/appinfo/${appId}`);
+  }
+  patchAppInfo(appId: string, patch: Partial<AppInfo>): Observable<AppInfo> {
+    return this.http.patch<AppInfo>(`${this.base}/appinfo/${appId}`, patch);
   }
 
   // ── AppStatus ─────────────────────────────────────────────────────────

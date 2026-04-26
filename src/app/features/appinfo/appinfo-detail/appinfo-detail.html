@@ -8,8 +8,85 @@
       }
     </div>
   </div>
-  <a class="btn btn-ghost" [routerLink]="['/appinfo']">{{ 'app_detail.back' | translate }}</a>
+  <div style="display: flex; gap: 0.5rem;">
+    @if (canEdit() && !editMode()) {
+      <button class="btn btn-primary" (click)="startEdit()">{{ 'common.edit' | translate }}</button>
+    }
+    <a class="btn btn-ghost" [routerLink]="['/appinfo']">{{ 'app_detail.back' | translate }}</a>
+  </div>
 </div>
+
+@if (editMode()) {
+  <div class="card" style="padding: 1.25rem 1.5rem;">
+    <h3 style="margin-top: 0;">{{ 'app_detail.edit_title' | translate }}</h3>
+    <form (submit)="$event.preventDefault(); save()" class="edit-form">
+      <div class="detail-grid">
+        <div class="field">
+          <label class="label" for="ed-status">{{ 'app_detail.field.status' | translate }}</label>
+          <select id="ed-status" class="value-input" [ngModel]="edit().status" (ngModelChange)="patch('status', $event)" name="status">
+            <option value="">—</option>
+            @for (s of statusOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label class="label" for="ed-repo">{{ 'app_detail.field.repository' | translate }}</label>
+          <input id="ed-repo" class="value-input" [ngModel]="edit().gitRepo" (ngModelChange)="patch('gitRepo', $event)" name="gitRepo" />
+        </div>
+      </div>
+
+      <h4 style="margin: 1rem 0 0.5rem;">{{ 'app_detail.envs' | translate }}</h4>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ 'app_detail.field.env' | translate }}</th>
+            <th>{{ 'app_detail.field.platform' | translate }}</th>
+            <th>{{ 'app_detail.field.url' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-muted">local</span></td>
+            <td><input class="value-input" [ngModel]="edit().localPlatform" (ngModelChange)="patch('localPlatform', $event)" name="localPlatform" /></td>
+            <td><input class="value-input" [ngModel]="edit().localUrl"      (ngModelChange)="patch('localUrl', $event)"      name="localUrl" /></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-muted">dev</span></td>
+            <td><input class="value-input" [ngModel]="edit().devPlatform"   (ngModelChange)="patch('devPlatform', $event)"   name="devPlatform" /></td>
+            <td><input class="value-input" [ngModel]="edit().devUrl"        (ngModelChange)="patch('devUrl', $event)"        name="devUrl" /></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-muted">int</span></td>
+            <td><input class="value-input" [ngModel]="edit().intPlatform"   (ngModelChange)="patch('intPlatform', $event)"   name="intPlatform" /></td>
+            <td><input class="value-input" [ngModel]="edit().intUrl"        (ngModelChange)="patch('intUrl', $event)"        name="intUrl" /></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-muted">uat</span></td>
+            <td><input class="value-input" [ngModel]="edit().uatPlatform"   (ngModelChange)="patch('uatPlatform', $event)"   name="uatPlatform" /></td>
+            <td><input class="value-input" [ngModel]="edit().uatUrl"        (ngModelChange)="patch('uatUrl', $event)"        name="uatUrl" /></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-muted">prd</span></td>
+            <td><input class="value-input" [ngModel]="edit().prdPlatform"   (ngModelChange)="patch('prdPlatform', $event)"   name="prdPlatform" /></td>
+            <td><input class="value-input" [ngModel]="edit().prdUrl"        (ngModelChange)="patch('prdUrl', $event)"        name="prdUrl" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+      @if (saveError(); as err) {
+        <div style="margin-top: 0.75rem; padding: 0.5rem 0.75rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; color: #991b1b;">⚠ {{ err }}</div>
+      }
+      <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          @if (saving()) { <span class="spinner"></span> {{ 'common.saving' | translate }} }
+          @else { {{ 'common.save' | translate }} }
+        </button>
+        <button type="button" class="btn btn-ghost" (click)="cancelEdit()">{{ 'common.cancel' | translate }}</button>
+      </div>
+    </form>
+  </div>
+}
 
 @if (loading()) {
   <div class="card loading-block"><span class="spinner"></span> {{ 'common.loading' | translate }}</div>

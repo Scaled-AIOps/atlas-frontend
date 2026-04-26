@@ -27,7 +27,11 @@
     "all": "Alle",
     "none": "Keine",
     "clear": "Leeren",
-    "clear_all": "Alle entfernen"
+    "clear_all": "Alle entfernen",
+    "edit": "Bearbeiten",
+    "save": "Speichern",
+    "saving": "Wird gespeichert…",
+    "cancel": "Abbrechen"
   },
   "shell": {
     "sign_out": "Abmelden",
@@ -227,6 +231,7 @@
     "title": "Squad: {{key}}",
     "back": "← Zurück zu Squads",
     "members": "Mitglieder",
+    "edit_title": "Squad bearbeiten",
     "field": {
       "key": "Schlüssel",
       "name": "Name",
@@ -303,6 +308,7 @@
     "view_history": "Deploy-Historie ansehen →",
     "envs": "Umgebungen",
     "probes": "Health-Probes",
+    "edit_title": "Anwendung bearbeiten",
     "field": {
       "app_id": "App-ID",
       "status": "Status",

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Squad, SubDomain, Tribe, TribeDomain } from '../api/models';
 
 const STORAGE_KEY = 'atlas.auth';
 
@@ -54,6 +55,42 @@ export class AuthService {
     return this.http
       .post<TokenLoginResponse>(`${this.base}/auth/login/token`, { email, token })
       .pipe(tap((r) => this.persist(r)));
+  }
+
+  /**
+   * Decide whether the signed-in user is allowed to edit the given squad.
+   * Returns true when their email matches:
+   *   - PO or SM of the squad
+   *   - lead of the squad's tribe / sub-domain / tribe-domain
+   *   - releaseManager of the squad's tribe (RMs sign off on every app, so
+   *     editing the squad they're attached to is fair game)
+   * Pass the parent records when known; missing parents are treated as
+   * "no role on that tier" (deny by default for that path).
+   */
+  canManageSquad(
+    squad: Squad | null | undefined,
+    parents?: { tribe?: Tribe | null; subDomain?: SubDomain | null; tribeDomain?: TribeDomain | null },
+  ): boolean {
+    if (!squad) return false;
+    const me = (this.userEmail() || '').toLowerCase();
+    if (!me) return false;
+    const eq = (v?: string) => !!v && v.toLowerCase() === me;
+    if (eq(squad.po) || eq(squad.sm)) return true;
+    if (parents?.tribe && (eq(parents.tribe.lead) || eq(parents.tribe.releaseManager))) return true;
+    if (parents?.subDomain && eq(parents.subDomain.lead)) return true;
+    if (parents?.tribeDomain && eq(parents.tribeDomain.lead)) return true;
+    return false;
+  }
+
+  /**
+   * Apps inherit their permissions from the owning squad. Same gate as
+   * canManageSquad, applied to the app's parent.
+   */
+  canManageApp(
+    squad: Squad | null | undefined,
+    parents?: { tribe?: Tribe | null; subDomain?: SubDomain | null; tribeDomain?: TribeDomain | null },
+  ): boolean {
+    return this.canManageSquad(squad, parents);
   }
 
   logout() {

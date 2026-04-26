@@ -3,8 +3,73 @@
     <h1>{{ 'squad_detail.title' | translate: { key: squad()?.key || '…' } }}</h1>
     <div class="page-sub">{{ squad()?.name }}</div>
   </div>
-  <a class="btn btn-ghost" [routerLink]="['/squads']">{{ 'squad_detail.back' | translate }}</a>
+  <div style="display: flex; gap: 0.5rem;">
+    @if (canEdit() && !editMode()) {
+      <button class="btn btn-primary" (click)="startEdit()">{{ 'common.edit' | translate }}</button>
+    }
+    <a class="btn btn-ghost" [routerLink]="['/squads']">{{ 'squad_detail.back' | translate }}</a>
+  </div>
 </div>
+
+@if (editMode()) {
+  <div class="card" style="padding: 1.25rem 1.5rem;">
+    <h3 style="margin-top: 0;">{{ 'squad_detail.edit_title' | translate }}</h3>
+    <form (submit)="$event.preventDefault(); save()" class="edit-form">
+      <div class="detail-grid">
+        <div class="field">
+          <label class="label" for="ed-name">{{ 'squad_detail.field.name' | translate }}</label>
+          <input id="ed-name" class="value-input" [ngModel]="edit().name" (ngModelChange)="patch('name', $event)" name="name" />
+        </div>
+        <div class="field">
+          <label class="label" for="ed-desc">{{ 'squad_detail.field.description' | translate }}</label>
+          <input id="ed-desc" class="value-input" [ngModel]="edit().description" (ngModelChange)="patch('description', $event)" name="description" />
+        </div>
+        <div class="field">
+          <label class="label" for="ed-po">{{ 'squad_detail.field.po' | translate }}</label>
+          <input id="ed-po" class="value-input" [ngModel]="edit().po" (ngModelChange)="patch('po', $event)" name="po" />
+        </div>
+        <div class="field">
+          <label class="label" for="ed-sm">{{ 'squad_detail.field.sm' | translate }}</label>
+          <input id="ed-sm" class="value-input" [ngModel]="edit().sm" (ngModelChange)="patch('sm', $event)" name="sm" />
+        </div>
+        <div class="field">
+          <label class="label" for="ed-ao">{{ 'squad_detail.field.ao' | translate }} <span style="color: var(--text-subtle);">(comma-separated)</span></label>
+          <input id="ed-ao" class="value-input" [ngModel]="edit().ao" (ngModelChange)="patch('ao', $event)" name="ao" />
+        </div>
+        <div class="field">
+          <label class="label" for="ed-ml">{{ 'squad_detail.field.mailing_list' | translate }}</label>
+          <input id="ed-ml" class="value-input" [ngModel]="edit().mailingList" (ngModelChange)="patch('mailingList', $event)" name="mailingList" />
+        </div>
+        <div class="field">
+          <label class="label" for="ed-members">{{ 'squad_detail.field.other_members' | translate: { count: 0 } }}</label>
+          <input id="ed-members" class="value-input" [ngModel]="edit().members" (ngModelChange)="patch('members', $event)" name="members" />
+        </div>
+        <div class="field">
+          <label class="label" for="ed-jira">{{ 'squad_detail.field.jira' | translate }}</label>
+          <input id="ed-jira" class="value-input" [ngModel]="edit().jira" (ngModelChange)="patch('jira', $event)" name="jira" />
+        </div>
+        <div class="field">
+          <label class="label" for="ed-github">{{ 'squad_detail.field.github' | translate }}</label>
+          <input id="ed-github" class="value-input" [ngModel]="edit().github" (ngModelChange)="patch('github', $event)" name="github" />
+        </div>
+        <div class="field">
+          <label class="label" for="ed-conf">{{ 'squad_detail.field.confluence' | translate }}</label>
+          <input id="ed-conf" class="value-input" [ngModel]="edit().confluence" (ngModelChange)="patch('confluence', $event)" name="confluence" />
+        </div>
+      </div>
+      @if (saveError(); as err) {
+        <div style="margin-top: 0.75rem; padding: 0.5rem 0.75rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; color: #991b1b;">⚠ {{ err }}</div>
+      }
+      <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          @if (saving()) { <span class="spinner"></span> {{ 'common.saving' | translate }} }
+          @else { {{ 'common.save' | translate }} }
+        </button>
+        <button type="button" class="btn btn-ghost" (click)="cancelEdit()">{{ 'common.cancel' | translate }}</button>
+      </div>
+    </form>
+  </div>
+}
 
 @if (loading()) {
   <div class="card loading-block"><span class="spinner"></span> {{ 'common.loading' | translate }}</div>
